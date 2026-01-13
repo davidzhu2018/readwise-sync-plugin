@@ -1,3 +1,8 @@
+/**
+ * @type {import('../orca.d.ts').OrcaAPI}
+ */
+globalThis.orca = globalThis.orca || {};
+
 class DataStore {
   constructor(pluginName = 'readwise-sync') {
     this.pluginName = pluginName;
@@ -82,7 +87,7 @@ class HighlightsCache {
   // 清理过期缓存
   async cleanupExpiredCache() {
     const allKeys = await this.getAllCacheKeys();
-    
+
     for (const key of allKeys) {
       if (key.startsWith('highlights_')) {
         const cached = await orca.plugins.getData(this.pluginName, key);
@@ -93,6 +98,24 @@ class HighlightsCache {
           }
         }
       }
+    }
+  }
+
+  // 获取所有缓存键
+  async getAllCacheKeys() {
+    // 注意：这需要 orca.plugins 提供列出所有键的方法
+    // 如果 orca API 不支持，需要其他实现方式
+    try {
+      // 假设 orca 提供了类似的方法
+      if (orca.plugins && orca.plugins.getAllKeys) {
+        return await orca.plugins.getAllKeys(this.pluginName);
+      }
+      // 如果没有，返回空数组或实现其他逻辑
+      console.warn('getAllKeys method not available in orca.plugins');
+      return [];
+    } catch (error) {
+      console.error('Failed to get cache keys:', error);
+      return [];
     }
   }
 }
@@ -117,11 +140,25 @@ class CursorManager {
   // 清理所有游标（用于全量同步）
   async clearAllCursors() {
     const allKeys = await this.getAllDataKeys();
-    
+
     for (const key of allKeys) {
       if (key.startsWith('cursor_')) {
         await orca.plugins.removeData(this.pluginName, key);
       }
+    }
+  }
+
+  // 获取所有数据键
+  async getAllDataKeys() {
+    try {
+      if (orca.plugins && orca.plugins.getAllKeys) {
+        return await orca.plugins.getAllKeys(this.pluginName);
+      }
+      console.warn('getAllKeys method not available in orca.plugins');
+      return [];
+    } catch (error) {
+      console.error('Failed to get data keys:', error);
+      return [];
     }
   }
 }
@@ -206,16 +243,30 @@ class StorageMonitor {
   async estimateStorageUsage() {
     let totalSize = 0;
     const allKeys = await this.getAllDataKeys();
-    
+
     for (const key of allKeys) {
       const value = await orca.plugins.getData(this.pluginName, key);
       if (value) {
         totalSize += new Blob([value]).size;
       }
     }
-    
+
     this.storageUsage = totalSize;
     return totalSize;
+  }
+
+  // 获取所有数据键
+  async getAllDataKeys() {
+    try {
+      if (orca.plugins && orca.plugins.getAllKeys) {
+        return await orca.plugins.getAllKeys(this.pluginName);
+      }
+      console.warn('getAllKeys method not available in orca.plugins');
+      return [];
+    } catch (error) {
+      console.error('Failed to get data keys:', error);
+      return [];
+    }
   }
 
   // 检查存储限制（浏览器本地存储通常5MB）
@@ -233,11 +284,30 @@ class StorageMonitor {
   // 自动清理旧数据
   async autoCleanup() {
     const storageInfo = await this.checkStorageLimit();
-    
+
     if (storageInfo.isNearLimit) {
       await this.cleanupExpiredCache();
       // 保留最近7天的同步统计
       await this.cleanupOldStats(7);
+    }
+  }
+
+  // 清理过期缓存（引用 HighlightsCache 的方法）
+  async cleanupExpiredCache() {
+    // 这里需要通过 DataStoreManager 访问 HighlightsCache
+    // 暂时留空，由 DataStoreManager 统一协调
+  }
+
+  // 清理旧统计信息
+  async cleanupOldStats(daysToKeep = 7) {
+    const cutoffDate = Date.now() - (daysToKeep * 24 * 60 * 60 * 1000);
+    const stats = await orca.plugins.getData(this.pluginName, 'syncStats');
+
+    if (stats) {
+      const statsData = JSON.parse(stats);
+      if (statsData.timestamp && new Date(statsData.timestamp).getTime() < cutoffDate) {
+        await orca.plugins.removeData(this.pluginName, 'syncStats');
+      }
     }
   }
 }

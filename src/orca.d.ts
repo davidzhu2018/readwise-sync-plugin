@@ -12,13 +12,31 @@ declare global {
       removeData(name: string, key: string): Promise<void>;
       setSettingsSchema(name: string, schema: any): Promise<void>;
     };
-    toolbar: {
-      registerToolbarButton(id: string, config: any): void;
-      unregisterToolbarButton(id: string): void;
+    headbar: {
+      registerHeadbarButton(id: string, component: Function): void;
+      unregisterHeadbarButton(id: string): void;
+    };
+    themes: {
+      injectCSSResource(path: string, pluginName: string): void;
+      removeCSSResources(pluginName: string): void;
+    };
+    components: {
+      Button: any;
+      HoverContextMenu: any;
+      MenuText: any;
+    };
+    broadcasts: {
+      registerHandler(event: string, handler: Function): void;
+      unregisterHandler(event: string, handler: Function): void;
     };
     notify(type: string, message: string): void;
+    invokeBackend: (message: string, ...args: any[]) => Promise<any>;
     state: {
       plugins: Record<string, any>;
+      commands?: Record<string, any>;
+      headbarButtons?: Record<string, any>;
+      panels?: Record<string, any>;
+      blocks?: Record<string, any>;
     };
   };
 }

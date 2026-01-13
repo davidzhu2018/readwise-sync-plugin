@@ -1,13 +1,12 @@
-import React from 'react';
-import { useSnapshot } from 'valtio';
+/**
+ * @type {import('../orca.d.ts').OrcaAPI}
+ */
+globalThis.orca = globalThis.orca || {};
 
-// 配置状态管理
-const syncState = proxy({
-  isSyncing: false,
-  lastSyncDate: null,
-  syncStats: {},
-  error: null
-});
+import React from 'react';
+import { useSnapshot, proxy } from 'valtio';
+import { syncState } from '../sync/sync-manager.js';
+import { syncManager } from '../sync/sync-manager.js';
 
 export function SettingsTab() {
   const pluginName = 'readwise-sync';
@@ -54,35 +53,80 @@ export function SettingsTab() {
 function ApiKeySetting({ value, onValidate }) {
   const [isValidating, setIsValidating] = React.useState(false);
   const [validationResult, setValidationResult] = React.useState(null);
-  
-  const handleApiKeyChange = async (newApiKey) => {
+  const [tempValue, setTempValue] = React.useState(value || '');
+
+  React.useEffect(() => {
+    setTempValue(value || '');
+  }, [value]);
+
+  const handleApiKeyChange = (e) => {
+    setTempValue(e.target.value);
+    // 清除之前的验证结果
+    if (validationResult) {
+      setValidationResult(null);
+    }
+  };
+
+  const handleSaveAndValidate = async () => {
+    if (!tempValue.trim()) {
+      orca.notify('error', '请输入 API Key');
+      return;
+    }
+
     // 保存设置
-    await orca.plugins.setSettings('app', 'readwise-sync', {
-      ...orca.state.plugins['readwise-sync']?.settings,
-      apiKey: newApiKey
-    });
-    
+    const currentSettings = await orca.plugins.getData('readwise-sync', 'settings') || {};
+    const newSettings = { ...currentSettings, apiKey: tempValue };
+    await orca.plugins.setData('readwise-sync', 'settings', newSettings);
+
+    // 更新 syncManager 的设置
+    if (syncManager) {
+      syncManager.settings = { ...syncManager.settings, ...newSettings };
+    }
+
     // 触发验证
-    if (newApiKey.trim()) {
-      setIsValidating(true);
-      const isValid = await onValidate(newApiKey);
+    setIsValidating(true);
+    try {
+      const isValid = await onValidate(tempValue);
       setValidationResult(isValid ? 'valid' : 'invalid');
+      if (isValid) {
+        orca.notify('success', 'API Key 已保存并验证成功');
+      } else {
+        orca.notify('error', 'API Key 验证失败，请检查是否正确');
+      }
+    } catch (error) {
+      setValidationResult('invalid');
+      orca.notify('error', `验证失败: ${error.message}`);
+    } finally {
       setIsValidating(false);
     }
   };
-  
+
   return (
     <div className="api-key-setting">
       <label htmlFor="api-key">Readwise API Key:</label>
-      <input
-        id="api-key"
-        type="password"
-        value={value || ''}
-        onChange={(e) => handleApiKeyChange(e.target.value)}
-        placeholder="输入您的 Readwise API 密钥"
-      />
-      
-      {isValidating && <span className="validating">验证中...</span>}
+      <div className="api-key-input-group">
+        <input
+          id="api-key"
+          type="password"
+          value={tempValue}
+          onChange={handleApiKeyChange}
+          placeholder="输入您的 Readwise API 密钥"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSaveAndValidate();
+            }
+          }}
+        />
+        <button
+          type="button"
+          onClick={handleSaveAndValidate}
+          disabled={isValidating || !tempValue.trim()}
+          className="api-key-confirm-btn"
+        >
+          {isValidating ? '验证中...' : '确定'}
+        </button>
+      </div>
+
       {validationResult === 'valid' && (
         <span className="valid">✅ API 密钥有效</span>
       )}
@@ -99,8 +143,8 @@ function SyncOptions({ settings, onSettingsChange }) {
       ...settings,
       [key]: value
     };
-    
-    await orca.plugins.setSettings('app', 'readwise-sync', newSettings);
+
+    await orca.plugins.setData('readwise-sync', 'settings', newSettings);
     onSettingsChange(newSettings);
   };
   
@@ -138,31 +182,31 @@ function AutoSyncSettings({ settings, onSettingsChange }) {
   
   const handleIntervalChange = async (newInterval) => {
     const interval = parseInt(newInterval);
-    
+
     // 验证最小间隔
     if (interval < 5) {
       setIntervalError('自动同步间隔不能小于 5 分钟');
       return;
     }
-    
+
     setIntervalError('');
-    
+
     const newSettings = {
       ...settings,
       syncInterval: interval
     };
-    
-    await orca.plugins.setSettings('app', 'readwise-sync', newSettings);
+
+    await orca.plugins.setData('readwise-sync', 'settings', newSettings);
     onSettingsChange(newSettings);
   };
-  
+
   const handleAutoSyncToggle = async (enabled) => {
     const newSettings = {
       ...settings,
       autoSyncEnabled: enabled
     };
-    
-    await orca.plugins.setSettings('app', 'readwise-sync', newSettings);
+
+    await orca.plugins.setData('readwise-sync', 'settings', newSettings);
     onSettingsChange(newSettings);
     
     if (enabled) {
@@ -267,14 +311,16 @@ orca.broadcasts.registerHandler('core.settingsChanged', async (pluginName, newSe
   if (pluginName === 'readwise-sync') {
     // 更新自动同步定时器
     if (newSettings.autoSyncEnabled !== undefined || newSettings.syncInterval !== undefined) {
-      await setupAutoSync(newSettings);
+      syncManager.setupAutoSync();
     }
-    
+
     // 更新 API 实例配置
     if (newSettings.apiKey !== undefined) {
-      readwiseAPI.updateSettings(newSettings);
+      if (syncManager.readwiseAPI) {
+        syncManager.readwiseAPI.updateSettings(newSettings);
+      }
     }
-    
+
     // 通知用户设置已保存
     orca.notify('success', 'Readwise 同步设置已更新');
   }
@@ -283,7 +329,7 @@ orca.broadcasts.registerHandler('core.settingsChanged', async (pluginName, newSe
 // API 密钥验证函数
 async function handleApiKeyValidation(apiKey) {
   try {
-    const isValid = await readwiseAPI.testConnection(apiKey);
+    const isValid = await syncManager.validateConnection();
     if (isValid) {
       orca.notify('success', 'API 密钥验证成功');
     } else {

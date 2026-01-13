@@ -1,8 +1,13 @@
+/**
+ * @type {import('../orca.d.ts').OrcaAPI}
+ */
+globalThis.orca = globalThis.orca || {};
+
 import { proxy,snapshot,subscribe } from 'valtio/vanilla';
 //const { proxy } = require('valtio');
 class ReadwiseAPI {
   constructor(apiKey) {
-    this.baseURL = ' https://readwise.io/api/v2';
+    this.baseURL = 'https://readwise.io/api/v2';
     this.apiKey = apiKey;
     this.requestState = proxy({
       isConnected: false,
@@ -74,15 +79,15 @@ async getHighlights(updatedAfter = null) {
 
     try {
       const data = await this.makeRequest(`/highlights?${params.toString()}`);
-      
+
       if (data?.results) {
         allHighlights = allHighlights.concat(data.results);
         console.log(`📄 Page ${page}: ${data.results.length} highlights`);
-        
+
         // Readwise 使用基于游标的分页
         nextCursor = data.next ? page + 1 : null;
         page++;
-        
+
         // 遵守速率限制：每页请求后延迟 100ms
         await this.delay(100);
       } else {
@@ -96,6 +101,52 @@ async getHighlights(updatedAfter = null) {
 
   console.log(`✅ Total highlights fetched: ${allHighlights.length}`);
   return allHighlights;
+}
+
+//📤 Export API - 推荐的导出端点
+//使用 Readwise Export API 获取所有高亮（包括书籍信息）
+
+async exportHighlights(updatedAfter = null) {
+  let allData = [];
+  let nextPageCursor = null;
+
+  console.log(`🔄 Exporting highlights ${updatedAfter ? `updated after ${updatedAfter}` : 'all time'}`);
+
+  do {
+    const params = new URLSearchParams();
+
+    if (nextPageCursor) {
+      params.append('pageCursor', nextPageCursor);
+    }
+    if (updatedAfter) {
+      params.append('updatedAfter', updatedAfter);
+    }
+
+    console.log(`Making export API request with params: ${params.toString()}`);
+
+    try {
+      const response = await this.makeRequest(`/export/?${params.toString()}`);
+
+      if (response?.results) {
+        allData = allData.concat(response.results);
+        nextPageCursor = response.nextPageCursor;
+        console.log(`📄 Fetched ${response.results.length} books, total highlights so far: ${allData.reduce((sum, book) => sum + (book.highlights?.length || 0), 0)}`);
+      } else {
+        nextPageCursor = null;
+      }
+
+      // 遵守速率限制：每页请求后延迟 100ms
+      if (nextPageCursor) {
+        await this.delay(100);
+      }
+    } catch (error) {
+      console.error(`❌ Failed to export page:`, error);
+      throw error;
+    }
+  } while (nextPageCursor);
+
+  console.log(`✅ Export complete: ${allData.length} books`);
+  return allData;
 }
 //🧪 连接测试接口
 //认证验证 为配置界面提供实时反馈：

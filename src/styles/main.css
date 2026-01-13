@@ -1,0 +1,82 @@
+.readwise-sync-button {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.readwise-sync-button:hover {
+  opacity: 0.8;
+}
+
+/* API Key 设置样式 */
+.api-key-setting {
+  margin-bottom: 20px;
+}
+
+.api-key-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.api-key-input-group input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.api-key-input-group input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.api-key-confirm-btn {
+  padding: 8px 16px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.api-key-confirm-btn:hover:not(:disabled) {
+  background-color: #357abd;
+}
+
+.api-key-confirm-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.api-key-confirm-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.valid {
+  color: #52c41a;
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+.invalid {
+  color: #ff4d4f;
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+.validating {
+  color: #1890ff;
+  margin-left: 8px;
+  font-size: 14px;
+}
+

@@ -1,0 +1,291 @@
+/* Readwise 同步插件样式文件 */
+.readwise-settings-tab {
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.readwise-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* API 密钥设置样式 */
+.api-key-setting {
+  background: var(--orca-bg-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--orca-border-color);
+}
+
+.api-key-input {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--orca-bg-primary);
+  border: 1px solid var(--orca-border-color);
+  border-radius: 4px;
+  color: var(--orca-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.api-key-input:focus {
+  outline: none;
+  border-color: var(--orca-accent);
+}
+
+.api-key-input.valid {
+  border-color: var(--orca-success);
+}
+
+.api-key-input.invalid {
+  border-color: var(--orca-error);
+}
+
+.api-key-input.validating {
+  border-color: var(--orca-warning);
+}
+
+.error-message {
+  color: var(--orca-error);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.help-text {
+  color: var(--orca-text-secondary);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* 同步选项样式 */
+.sync-options {
+  background: var(--orca-bg-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--orca-border-color);
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.option-row:last-child {
+  margin-bottom: 0;
+}
+
+.option-label {
+  min-width: 200px;
+  font-weight: 500;
+}
+
+.option-help {
+  color: var(--orca-text-secondary);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* 自动同步设置样式 */
+.auto-sync-settings {
+  background: var(--orca-bg-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--orca-border-color);
+}
+
+.sync-interval-input {
+  width: 120px;
+  padding: 0.5rem;
+  background: var(--orca-bg-primary);
+  border: 1px solid var(--orca-border-color);
+  border-radius: 4px;
+  color: var(--orca-text-primary);
+}
+
+/* 同步状态显示样式 */
+.sync-status {
+  background: var(--orca-bg-secondary);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--orca-border-color);
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.status-label {
+  font-size: 0.875rem;
+  color: var(--orca-text-secondary);
+}
+
+.status-value {
+  font-weight: 500;
+}
+
+.status-value.syncing {
+  color: var(--orca-warning);
+}
+
+.status-value.idle {
+  color: var(--orca-success);
+}
+
+.status-value.error {
+  color: var(--orca-error);
+}
+
+.last-sync-time {
+  font-size: 0.875rem;
+  color: var(--orca-text-secondary);
+  font-style: italic;
+}
+
+/* 同步操作按钮样式 */
+.sync-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--orca-border-color);
+}
+
+.sync-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sync-button.primary {
+  background: var(--orca-accent);
+  color: white;
+}
+
+.sync-button.primary:hover:not([disabled]) {
+  background: var(--orca-accent-hover);
+}
+
+.sync-button.secondary {
+  background: var(--orca-bg-tertiary);
+  color: var(--orca-text-primary);
+  border: 1px solid var(--orca-border-color);
+}
+
+.sync-button.secondary:hover:not([disabled]) {
+  background: var(--orca-bg-secondary);
+}
+
+.sync-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sync-button.syncing {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.sync-button.syncing::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .readwise-settings-tab {
+    padding: 1rem;
+  }
+  
+  .option-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sync-actions {
+    flex-direction: column;
+  }
+  
+  .sync-button {
+    width: 100%;
+  }
+}
+
+/* 可访问性改进 */
+.sync-button:focus {
+  outline: 2px solid var(--orca-accent);
+  outline-offset: 2px;
+}
+
+.api-key-input:focus {
+  outline: 2px solid var(--orca-accent);
+  outline-offset: 2px;
+}
+
+/* 最小点击区域 */
+.sync-button,
+.option-row input[type="checkbox"] + label {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .api-key-setting,
+  .sync-options,
+  .auto-sync-settings,
+  .sync-status {
+    border-width: 2px;
+  }
+  
+  .sync-button {
+    border-width: 2px;
+  }
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .sync-button.syncing::before {
+    animation: none;
+  }
+  
+  .sync-button {
+    transition: none;
+  }
+}

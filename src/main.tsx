@@ -1,5 +1,6 @@
 import { SyncSettings } from './types.js';
-import { syncManager } from './sync/sync-manager.js';
+import { syncManager, syncState } from './sync/sync-manager.js';
+import { subscribe, snapshot } from 'valtio/vanilla';
 import LogoImg from '../icon.png';
 import './styles/main.css';
 
@@ -213,46 +214,86 @@ function registerToolbarButton(_pluginName: string) {
         return;
       }
 
-      // 注册 headbar 按钮，使用 JSX
-      orca.headbar.registerHeadbarButton(
-        `${_pluginName}.sync`,
-        () => (
+      // 用于触发重新渲染的函数
+      let rerender: (() => void) | null = null;
+
+      // 渲染按钮的函数
+      const renderButton = () => {
+        const currentState = snapshot(syncState);
+        const isSyncing = currentState.isSyncing;
+
+        return (
           <HoverContextMenu
             menu={(closeMenu: () => void) => (
               <>
                 <MenuText
-                  title="Sync Now (Incremental)"
+                  title={isSyncing ? "正在同步中..." : "Sync Now (Incremental)"}
                   onClick={async () => {
-                    closeMenu();
-                    await orca.commands.invokeCommand(`${_pluginName}.sync`);
+                    if (!isSyncing) {
+                      closeMenu();
+                      await orca.commands.invokeCommand(`${_pluginName}.sync`);
+                    }
                   }}
+                  disabled={isSyncing}
                 />
                 <MenuText
                   title="Full Sync (All Highlights)"
                   onClick={async () => {
-                    closeMenu();
-                    await orca.commands.invokeCommand(`${_pluginName}.fullSync`);
+                    if (!isSyncing) {
+                      closeMenu();
+                      await orca.commands.invokeCommand(`${_pluginName}.fullSync`);
+                    }
                   }}
+                  disabled={isSyncing}
                 />
                 <MenuText
                   title="Test Connection"
                   onClick={async () => {
-                    closeMenu();
-                    await orca.commands.invokeCommand(`${_pluginName}.testConnection`);
+                    if (!isSyncing) {
+                      closeMenu();
+                      await orca.commands.invokeCommand(`${_pluginName}.testConnection`);
+                    }
                   }}
+                  disabled={isSyncing}
                 />
               </>
             )}
           >
             <Button
               variant="plain"
-              onClick={() => orca.commands.invokeCommand(`${_pluginName}.sync`)}
+              onClick={() => {
+                if (!isSyncing) {
+                  orca.commands.invokeCommand(`${_pluginName}.sync`);
+                }
+              }}
+              disabled={isSyncing}
+              style={{ opacity: isSyncing ? 0.5 : 1 }}
             >
               <img className="readwise-sync-button" src={LogoImg} alt="Readwise Sync" />
+              {isSyncing && <span style={{ marginLeft: '8px', fontSize: '12px' }}>同步中...</span>}
             </Button>
           </HoverContextMenu>
-        )
+        );
+      };
+
+      // 注册 headbar 按钮，使用 JSX
+      orca.headbar.registerHeadbarButton(
+        `${_pluginName}.sync`,
+        () => renderButton()
       );
+
+      // 订阅状态变化，触发重新渲染
+      const unsubscribe = subscribe(syncState, () => {
+        // 强制 Orca 重新渲染按钮
+        orca.headbar.unregisterHeadbarButton(`${_pluginName}.sync`);
+        orca.headbar.registerHeadbarButton(
+          `${_pluginName}.sync`,
+          () => renderButton()
+        );
+      });
+
+      // 保存取消订阅函数，用于清理
+      (window as any).__readwiseSyncUnsubscribe = unsubscribe;
 
       console.log('[Readwise Sync] Headbar button registered successfully');
     } catch (error) {

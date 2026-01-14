@@ -3,7 +3,8 @@
     "allow": [
       "Skill(code-review:code-review)",
       "Skill(code-review:code-review:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(npm run build)"
     ]
   }
 }

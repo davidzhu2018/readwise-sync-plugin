@@ -72,6 +72,11 @@ class SyncManager {
     syncState.error = null;
     syncState.progress = { current: 0, total: 0, message: '准备同步...' };
 
+    // 显示开始同步消息
+    orca.notify('info', '正在同步中，请稍候！');
+
+    const syncStartTime = Date.now();
+
     try {
       // 验证API密钥和连接
       await this.validateConnection();
@@ -109,10 +114,20 @@ class SyncManager {
       // 保存最后同步时间
       await this.saveLastSyncDate();
 
+      // 计算耗时
+      const syncEndTime = Date.now();
+      const totalDuration = syncEndTime - syncStartTime;
+      const minutes = Math.floor(totalDuration / 60000);
+      const seconds = Math.floor((totalDuration % 60000) / 1000);
+
+      // 显示完成消息
+      orca.notify('success', `同步完成，本次同步 ${result.newCount} 条数据，耗时 ${minutes} 分 ${seconds} 秒。`);
+
       return result;
 
     } catch (error) {
       syncState.error = error;
+      orca.notify('error', `同步失败：${error.message}`);
       throw error;
     } finally {
       syncState.isSyncing = false;
@@ -231,19 +246,19 @@ class SyncManager {
 
   formatBlockContent(highlight) {
     // 格式化高亮内容为 Orca 块内容
-    let content = highlight.text || highlight.highlight || '';
+    let content = String(highlight.text || highlight.highlight || '');
 
     // 添加来源信息
     if (highlight.book_title) {
-      content += `\n\n来源: ${highlight.book_title}`;
+      content += `\n\n来源: ${String(highlight.book_title)}`;
       if (highlight.author) {
-        content += ` by ${highlight.author}`;
+        content += ` by ${String(highlight.author)}`;
       }
     }
 
     // 添加高亮位置信息
     if (highlight.highlighted_at) {
-      content += `\n高亮时间: ${highlight.highlighted_at}`;
+      content += `\n高亮时间: ${String(highlight.highlighted_at)}`;
     }
 
     return content;
@@ -326,19 +341,9 @@ class SyncManager {
       console.log('Found root block from active panel:', rootBlockId);
     }
 
-    // 方法2: 如果方法1失败，尝试获取今日日记页面
+    // 方法2: 如果方法1失败，直接查找任何根块（没有parent的块）
     if (!rootBlockId) {
-      console.log('No root block from active panel, trying today\'s journal page');
-      const journalPanel = await this.getOrCreateTodayJournalPage();
-      if (journalPanel) {
-        rootBlockId = this.findRootBlock(journalPanel);
-        console.log('Found root block from journal page:', rootBlockId);
-      }
-    }
-
-    // 方法3: 如果前两种方法都失败，直接查找任何根块（没有parent的块）
-    if (!rootBlockId) {
-      console.log('No root block from journal, searching for any root block');
+      console.log('No root block from active panel, searching for any root block');
       const blocks = orca.state?.blocks;
       if (blocks) {
         for (const blockId in blocks) {
@@ -359,13 +364,20 @@ class SyncManager {
 
     console.log('Using root block ID:', rootBlockId);
 
-    // 直接在根级别创建一个新的同步块（每次同步都创建新的）
-    const syncDate = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
-    const syncBlockTitle = `Readwise Sync - ${syncDate}`;
+    // 创建同步标记块：ReadwiseSyncToOrca + 年月日时分秒
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hour = String(now.getHours()).padStart(2, '0');
+    const minute = String(now.getMinutes()).padStart(2, '0');
+    const second = String(now.getSeconds()).padStart(2, '0');
+    const syncTimestamp = `${year}${month}${day}${hour}${minute}${second}`;
+    const syncBlockTitle = `ReadwiseSyncToOrca${syncTimestamp}`;
 
     let syncRootBlockId = null;
     try {
-      // 在根块的最后创建同步块
+      // 在根块的最后创建同步标记块
       syncRootBlockId = await orca.commands.invokeEditorCommand(
         'core.editor.insertBlock',
         null,
@@ -380,7 +392,7 @@ class SyncManager {
         // 将其转换为二级标题
         await orca.commands.invokeEditorCommand('core.editor.makeHeading2', null, syncRootBlockId);
 
-        // 添加 "Readwise" 标签到同步块
+        // 添加 "Readwise" 标签到同步标记块
         try {
           await orca.commands.invokeEditorCommand(
             'core.editor.insertTag',
@@ -401,58 +413,26 @@ class SyncManager {
 
         console.log('Creating child blocks for', highlights.length, 'highlights');
 
-        // 逐个创建子块
-        for (let i = 0; i < highlights.length; i++) {
-          const highlight = highlights[i];
-          const text = this.formatBlockContent(highlight);
+        const validHighlights = highlights.filter(h => {
+          const text = this.formatBlockContent(h);
+          return text && text.trim() !== '';
+        });
 
-          if (!text || text.trim() === '') {
-            console.log('Skipping highlight with no text:', highlight);
-            continue;
-          }
+        console.log('Valid highlights to create:', validHighlights.length);
 
-          try {
-            // 使用 syncRootBlockId 作为父块
-            const blockId = await orca.commands.invokeEditorCommand(
-              'core.editor.insertBlock',
-              null,
-              syncRootBlockId,
-              'lastChild',
-              [{ t: 't', v: text }]
-            );
+        // 直接使用逐个创建的方法，因为 insertText 需要先选中块
+        // 而 selectBlock 命令不存在，所以直接创建子块
+        console.log('Creating child blocks directly using insertBlock...');
 
-            console.log(`Created block ${blockId} for highlight ${i + 1}:`, text.substring(0, 50));
+        await this.createBlocksIndividually(syncRootBlockId, validHighlights, createdBlocks, failedBlocks);
 
-            // 为每个高亮块添加 "Readwise" 标签
-            try {
-              await orca.commands.invokeEditorCommand(
-                'core.editor.insertTag',
-                null,
-                blockId,
-                'Readwise'
-              );
-              console.log(`Added Readwise tag to block ${blockId}`);
-            } catch (tagError) {
-              console.warn(`Failed to add tag to block ${blockId}:`, tagError);
-            }
-
-            createdBlocks.push({ id: blockId, content: text });
-
-            syncState.progress.current = i + 1;
-            syncState.progress.message = `已创建 ${i + 1}/${highlights.length} 个块`;
-
-            // 批量处理延迟
-            if ((i + 1) % 10 === 0) {
-              await this.delay(50);
-            }
-
-          } catch (error) {
-            console.error(`Failed to create block for highlight ${highlight.id}:`, error);
-            failedBlocks.push({ highlight, error });
-          }
-        }
+        syncState.progress.current = createdBlocks.length;
+        syncState.progress.message = `已创建 ${createdBlocks.length}/${validHighlights.length} 个块`;
 
         console.log('Created', createdBlocks.length, 'blocks, failed', failedBlocks.length);
+
+        // 等待一下让块完全创建
+        await this.delay(200);
 
         // 验证块是否真的被创建
         const syncBlock = orca.state.blocks[syncRootBlockId];
@@ -465,6 +445,26 @@ class SyncManager {
             parent: syncBlock.parent,
             left: syncBlock.left
           });
+
+          // 验证子块
+          if (syncBlock.children && Array.isArray(syncBlock.children)) {
+            console.log('Children block IDs:', syncBlock.children);
+            syncBlock.children.forEach((childId, index) => {
+              const childBlock = orca.state.blocks[childId];
+              if (childBlock) {
+                console.log(`Child ${index}:`, {
+                  id: childBlock.id,
+                  parent: childBlock.parent,
+                  left: childBlock.left,
+                  text: childBlock.text?.substring(0, 30)
+                });
+              } else {
+                console.warn(`Child block ${childId} not found in state!`);
+              }
+            });
+          } else {
+            console.warn('Sync block has no children array');
+          }
         } else {
           console.warn('Sync block not found in orca.state.blocks after creation!');
         }
@@ -475,6 +475,122 @@ class SyncManager {
     }
 
     return { createdBlocks, failedBlocks };
+  }
+
+  // 逐个创建块的备用方法
+  async createBlocksIndividually(syncRootBlockId, validHighlights, createdBlocks, failedBlocks) {
+    console.log('Creating blocks individually...');
+
+    // 首先验证父块是否存在且有效
+    const parentBlock = orca.state.blocks[syncRootBlockId];
+    if (!parentBlock) {
+      console.error('Parent block not found:', syncRootBlockId);
+      throw new Error('Parent block not found');
+    }
+    console.log('Parent block verified:', {
+      id: parentBlock.id,
+      text: parentBlock.text,
+      parent: parentBlock.parent,
+      left: parentBlock.left,
+      childrenCount: parentBlock.children?.length || 0
+    });
+
+    for (let i = 0; i < validHighlights.length; i++) {
+      const highlight = validHighlights[i];
+      const text = this.formatBlockContent(highlight);
+
+      try {
+        console.log(`Creating block ${i + 1}/${validHighlights.length}`);
+
+        let blockId;
+
+        // 尝试多种位置参数来创建子块
+        const positions = ['firstChild', 'lastChild', 'into', 'append', 'child'];
+
+        let lastError = null;
+        for (const pos of positions) {
+          try {
+            console.log(`Trying position '${pos}'...`);
+            blockId = await orca.commands.invokeEditorCommand(
+              'core.editor.insertBlock',
+              null,
+              syncRootBlockId,
+              pos,
+              [{ t: 't', v: text }]
+            );
+            console.log(`Created block via '${pos}': ${blockId}`);
+            lastError = null;
+            break;
+          } catch (posError) {
+            lastError = posError;
+            console.warn(`Position '${pos}' failed: ${posError.message}`);
+          }
+        }
+
+        // 如果所有位置都失败了，抛出错误
+        if (lastError && !blockId) {
+          throw lastError;
+        }
+
+        // 等待块创建完成
+        await this.delay(50);
+
+        // 验证块的 parent 和 left 属性
+        const createdBlock = orca.state.blocks[blockId];
+        if (createdBlock) {
+          console.log(`Block ${blockId} properties:`, {
+            id: createdBlock.id,
+            parent: createdBlock.parent,
+            left: createdBlock.left,
+            text: createdBlock.text?.substring(0, 50)
+          });
+
+          // 如果 parent 仍然为 null，尝试不同的修复方法
+          if (!createdBlock.parent || createdBlock.parent !== syncRootBlockId) {
+            console.warn(`Block ${blockId} has incorrect parent: ${createdBlock.parent}, expected ${syncRootBlockId}`);
+
+            // 尝试直接修改 state（不推荐，但作为最后手段）
+            try {
+              if (orca.state.blocks && orca.state.blocks[blockId]) {
+                const prevBlockId = createdBlocks.length > 0 ? createdBlocks[createdBlocks.length - 1].id : null;
+
+                orca.state.blocks[blockId].parent = syncRootBlockId;
+                orca.state.blocks[blockId].left = prevBlockId;
+
+                // 同时更新父块的 children 数组
+                if (!orca.state.blocks[syncRootBlockId].children) {
+                  orca.state.blocks[syncRootBlockId].children = [];
+                }
+                if (!orca.state.blocks[syncRootBlockId].children.includes(blockId)) {
+                  orca.state.blocks[syncRootBlockId].children.push(blockId);
+                }
+
+                console.log(`Direct state modification: set parent=${syncRootBlockId}, left=${prevBlockId}`);
+                await this.delay(20);
+
+                // 验证修改后的属性
+                const updatedBlock = orca.state.blocks[blockId];
+                console.log(`After direct modification, parent:`, updatedBlock?.parent, `left:`, updatedBlock?.left);
+              }
+            } catch (directError) {
+              console.warn(`Direct state modification failed: ${directError.message}`);
+            }
+          }
+        } else {
+          console.warn(`Block ${blockId} not found in state after creation`);
+        }
+
+        console.log(`Created block ${blockId} for highlight ${i + 1}:`, String(text).substring(0, 50));
+        createdBlocks.push({ id: blockId, content: text });
+
+      } catch (error) {
+        console.error(`Failed to create block for highlight:`, error);
+        failedBlocks.push({ highlight, error });
+      }
+
+      syncState.progress.current = createdBlocks.length;
+      syncState.progress.message = `已创建 ${createdBlocks.length}/${validHighlights.length} 个块`;
+    }
   }
 
   // 获取当前活动的面板

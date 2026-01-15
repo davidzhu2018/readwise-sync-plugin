@@ -420,9 +420,8 @@ class SyncManager {
 
         console.log('Valid highlights to create:', validHighlights.length);
 
-        // 直接使用逐个创建的方法，因为 insertText 需要先选中块
-        // 而 selectBlock 命令不存在，所以直接创建子块
-        console.log('Creating child blocks directly using insertBlock...');
+        // 由于 batchInsertText 存在问题，直接使用逐个创建的方法
+        console.log('Creating child blocks using individual insertBlock calls...');
 
         await this.createBlocksIndividually(syncRootBlockId, validHighlights, createdBlocks, failedBlocks);
 
@@ -477,9 +476,9 @@ class SyncManager {
     return { createdBlocks, failedBlocks };
   }
 
-  // 逐个创建块的备用方法
+  // 顺序创建子块
   async createBlocksIndividually(syncRootBlockId, validHighlights, createdBlocks, failedBlocks) {
-    console.log('Creating blocks individually...');
+    console.log('Creating blocks sequentially...');
 
     // 首先验证父块是否存在且有效
     const parentBlock = orca.state.blocks[syncRootBlockId];
@@ -495,6 +494,12 @@ class SyncManager {
       childrenCount: parentBlock.children?.length || 0
     });
 
+    // 确保父块有 children 数组
+    if (!orca.state.blocks[syncRootBlockId].children) {
+      orca.state.blocks[syncRootBlockId].children = [];
+    }
+
+    // 按顺序创建块
     for (let i = 0; i < validHighlights.length; i++) {
       const highlight = validHighlights[i];
       const text = this.formatBlockContent(highlight);
@@ -502,94 +507,93 @@ class SyncManager {
       try {
         console.log(`Creating block ${i + 1}/${validHighlights.length}`);
 
-        let blockId;
+        // 使用 lastChild 位置创建块
+        const blockId = await orca.commands.invokeEditorCommand(
+          'core.editor.insertBlock',
+          null,
+          syncRootBlockId,
+          'lastChild',
+          [{ t: 't', v: text }]
+        );
 
-        // 尝试多种位置参数来创建子块
-        const positions = ['firstChild', 'lastChild', 'into', 'append', 'child'];
-
-        let lastError = null;
-        for (const pos of positions) {
-          try {
-            console.log(`Trying position '${pos}'...`);
-            blockId = await orca.commands.invokeEditorCommand(
-              'core.editor.insertBlock',
-              null,
-              syncRootBlockId,
-              pos,
-              [{ t: 't', v: text }]
-            );
-            console.log(`Created block via '${pos}': ${blockId}`);
-            lastError = null;
-            break;
-          } catch (posError) {
-            lastError = posError;
-            console.warn(`Position '${pos}' failed: ${posError.message}`);
-          }
-        }
-
-        // 如果所有位置都失败了，抛出错误
-        if (lastError && !blockId) {
-          throw lastError;
-        }
+        console.log(`Created block ${blockId}`);
 
         // 等待块创建完成
-        await this.delay(50);
+        await this.delay(20);
 
-        // 验证块的 parent 和 left 属性
-        const createdBlock = orca.state.blocks[blockId];
-        if (createdBlock) {
-          console.log(`Block ${blockId} properties:`, {
-            id: createdBlock.id,
-            parent: createdBlock.parent,
-            left: createdBlock.left,
-            text: createdBlock.text?.substring(0, 50)
-          });
+        // 获取前一个块的ID（用于设置left）
+        const prevBlockId = i > 0 ? createdBlocks[i - 1].id : null;
 
-          // 如果 parent 仍然为 null，尝试不同的修复方法
-          if (!createdBlock.parent || createdBlock.parent !== syncRootBlockId) {
-            console.warn(`Block ${blockId} has incorrect parent: ${createdBlock.parent}, expected ${syncRootBlockId}`);
-
-            // 尝试直接修改 state（不推荐，但作为最后手段）
-            try {
-              if (orca.state.blocks && orca.state.blocks[blockId]) {
-                const prevBlockId = createdBlocks.length > 0 ? createdBlocks[createdBlocks.length - 1].id : null;
-
-                orca.state.blocks[blockId].parent = syncRootBlockId;
-                orca.state.blocks[blockId].left = prevBlockId;
-
-                // 同时更新父块的 children 数组
-                if (!orca.state.blocks[syncRootBlockId].children) {
-                  orca.state.blocks[syncRootBlockId].children = [];
-                }
-                if (!orca.state.blocks[syncRootBlockId].children.includes(blockId)) {
-                  orca.state.blocks[syncRootBlockId].children.push(blockId);
-                }
-
-                console.log(`Direct state modification: set parent=${syncRootBlockId}, left=${prevBlockId}`);
-                await this.delay(20);
-
-                // 验证修改后的属性
-                const updatedBlock = orca.state.blocks[blockId];
-                console.log(`After direct modification, parent:`, updatedBlock?.parent, `left:`, updatedBlock?.left);
-              }
-            } catch (directError) {
-              console.warn(`Direct state modification failed: ${directError.message}`);
-            }
-          }
-        } else {
-          console.warn(`Block ${blockId} not found in state after creation`);
+        // 手动设置块的 parent 和 left 属性
+        if (orca.state.blocks[blockId]) {
+          orca.state.blocks[blockId].parent = syncRootBlockId;
+          orca.state.blocks[blockId].left = prevBlockId;
+          console.log(`Manually set block ${blockId}: parent=${syncRootBlockId}, left=${prevBlockId}`);
         }
 
-        console.log(`Created block ${blockId} for highlight ${i + 1}:`, String(text).substring(0, 50));
+        // 手动将块添加到父块的 children 数组
+        if (!orca.state.blocks[syncRootBlockId].children.includes(blockId)) {
+          orca.state.blocks[syncRootBlockId].children.push(blockId);
+          console.log(`Added block ${blockId} to parent's children array, total children: ${orca.state.blocks[syncRootBlockId].children.length}`);
+        }
+
+        // 验证块的属性
+        const childBlock = orca.state.blocks[blockId];
+        if (childBlock) {
+          console.log(`Block ${blockId} properties after manual fix:`, {
+            parent: childBlock.parent,
+            left: childBlock.left,
+            text: childBlock.text?.substring(0, 50)
+          });
+        }
+
         createdBlocks.push({ id: blockId, content: text });
 
+        // 每200条更新一次进度，避免刷新太快导致渲染问题
+        if ((createdBlocks.length % 200 === 0) || createdBlocks.length === validHighlights.length) {
+          syncState.progress.current = createdBlocks.length;
+          syncState.progress.message = `${createdBlocks.length}/${validHighlights.length} 同步中`;
+        }
+
       } catch (error) {
-        console.error(`Failed to create block for highlight:`, error);
+        console.error(`Failed to create block:`, error);
         failedBlocks.push({ highlight, error });
       }
+    }
 
-      syncState.progress.current = createdBlocks.length;
-      syncState.progress.message = `已创建 ${createdBlocks.length}/${validHighlights.length} 个块`;
+    console.log('Creation completed:', createdBlocks.length, 'blocks created');
+
+    // 最终验证
+    console.log('Final verification...');
+    await this.delay(300);
+
+    const finalParentBlock = orca.state.blocks[syncRootBlockId];
+    if (finalParentBlock) {
+      console.log('Parent block final state:', {
+        id: finalParentBlock.id,
+        childrenCount: finalParentBlock.children?.length || 0,
+        children: finalParentBlock.children,
+        expectedCount: createdBlocks.length
+      });
+
+      // 验证子块
+      if (finalParentBlock.children && Array.isArray(finalParentBlock.children)) {
+        console.log('Children block IDs:', finalParentBlock.children);
+        finalParentBlock.children.forEach((childId, index) => {
+          const childBlock = orca.state.blocks[childId];
+          if (childBlock) {
+            console.log(`Child ${index} (block ${childId}):`, {
+              parent: childBlock.parent,
+              left: childBlock.left,
+              text: childBlock.text?.substring(0, 50)
+            });
+          } else {
+            console.warn(`Child block ${childId} not found in state!`);
+          }
+        });
+      } else {
+        console.warn('Sync block has no children array');
+      }
     }
   }
 

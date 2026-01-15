@@ -221,6 +221,15 @@ function registerToolbarButton(_pluginName: string) {
       const renderButton = () => {
         const currentState = snapshot(syncState);
         const isSyncing = currentState.isSyncing;
+        const progress = currentState.progress;
+
+        // 生成进度文本
+        let progressText = '';
+        if (isSyncing && progress.total > 0) {
+          progressText = `${progress.current}/${progress.total} 同步中`;
+        } else if (isSyncing) {
+          progressText = '同步中...';
+        }
 
         return (
           <HoverContextMenu
@@ -270,7 +279,7 @@ function registerToolbarButton(_pluginName: string) {
               style={{ opacity: isSyncing ? 0.5 : 1 }}
             >
               <img className="readwise-sync-button" src={LogoImg} alt="Readwise Sync" />
-              {isSyncing && <span style={{ marginLeft: '8px', fontSize: '12px' }}>同步中...</span>}
+              {progressText && <span style={{ marginLeft: '8px', fontSize: '12px' }}>{progressText}</span>}
             </Button>
           </HoverContextMenu>
         );

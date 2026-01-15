@@ -223,10 +223,10 @@ function registerToolbarButton(_pluginName: string) {
         const isSyncing = currentState.isSyncing;
         const progress = currentState.progress;
 
-        // 生成进度文本
+        // 生成进度文本 - 显示分类进度
         let progressText = '';
-        if (isSyncing && progress.total > 0) {
-          progressText = `${progress.current}/${progress.total} 同步中`;
+        if (isSyncing && progress.message) {
+          progressText = progress.message;
         } else if (isSyncing) {
           progressText = '同步中...';
         }

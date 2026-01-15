@@ -1,4 +1,4 @@
-var H = { exports: {} }, B = {};
+var F = { exports: {} }, v = {};
 const G = React;
 /**
  * @license React
@@ -9,188 +9,188 @@ const G = React;
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var U;
-function _() {
-  if (U) return B;
-  U = 1;
-  var s = G, A = Symbol.for("react.element"), t = Symbol.for("react.fragment"), e = Object.prototype.hasOwnProperty, o = s.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, a = { key: !0, ref: !0, __self: !0, __source: !0 };
-  function n(i, c, r) {
-    var g, h = {}, R = null, y = null;
-    r !== void 0 && (R = "" + r), c.key !== void 0 && (R = "" + c.key), c.ref !== void 0 && (y = c.ref);
-    for (g in c) e.call(c, g) && !a.hasOwnProperty(g) && (h[g] = c[g]);
-    if (i && i.defaultProps) for (g in c = i.defaultProps, c) h[g] === void 0 && (h[g] = c[g]);
-    return { $$typeof: A, type: i, key: R, ref: y, props: h, _owner: o.current };
-  }
-  return B.Fragment = t, B.jsx = n, B.jsxs = n, B;
-}
 var O;
-function q() {
-  return O || (O = 1, H.exports = _()), H.exports;
-}
-var N = q();
-const Z = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap(), X = (s) => s && (J.has(s) ? J.get(s) : Y(s) === Object.prototype || Y(s) === Array.prototype), AA = (s) => X(s) && s[Z] || null, V = (s, A = !0) => {
-  J.set(s, A);
-}, M = {}, $ = (s) => typeof s == "object" && s !== null, D = /* @__PURE__ */ new WeakMap(), T = /* @__PURE__ */ new WeakSet(), tA = (s = Object.is, A = (r, g) => new Proxy(r, g), t = (r) => $(r) && !T.has(r) && (Array.isArray(r) || !(Symbol.iterator in r)) && !(r instanceof WeakMap) && !(r instanceof WeakSet) && !(r instanceof Error) && !(r instanceof Number) && !(r instanceof Date) && !(r instanceof String) && !(r instanceof RegExp) && !(r instanceof ArrayBuffer), e = (r) => {
-  switch (r.status) {
-    case "fulfilled":
-      return r.value;
-    case "rejected":
-      throw r.reason;
-    default:
-      throw r;
+function _() {
+  if (O) return v;
+  O = 1;
+  var r = G, A = Symbol.for("react.element"), t = Symbol.for("react.fragment"), e = Object.prototype.hasOwnProperty, o = r.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, c = { key: !0, ref: !0, __self: !0, __source: !0 };
+  function n(g, a, s) {
+    var l, i = {}, u = null, R = null;
+    s !== void 0 && (u = "" + s), a.key !== void 0 && (u = "" + a.key), a.ref !== void 0 && (R = a.ref);
+    for (l in a) e.call(a, l) && !c.hasOwnProperty(l) && (i[l] = a[l]);
+    if (g && g.defaultProps) for (l in a = g.defaultProps, a) i[l] === void 0 && (i[l] = a[l]);
+    return { $$typeof: A, type: g, key: u, ref: R, props: i, _owner: o.current };
   }
-}, o = /* @__PURE__ */ new WeakMap(), a = (r, g, h = e) => {
-  const R = o.get(r);
-  if (R?.[0] === g)
-    return R[1];
-  const y = Array.isArray(r) ? [] : Object.create(Object.getPrototypeOf(r));
-  return V(y, !0), o.set(r, [g, y]), Reflect.ownKeys(r).forEach((S) => {
-    if (Object.getOwnPropertyDescriptor(y, S))
+  return v.Fragment = t, v.jsx = n, v.jsxs = n, v;
+}
+var U;
+function q() {
+  return U || (U = 1, F.exports = _()), F.exports;
+}
+var W = q();
+const Z = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap(), X = (r) => r && (J.has(r) ? J.get(r) : Y(r) === Object.prototype || Y(r) === Array.prototype), AA = (r) => X(r) && r[Z] || null, V = (r, A = !0) => {
+  J.set(r, A);
+}, x = {}, H = (r) => typeof r == "object" && r !== null, P = /* @__PURE__ */ new WeakMap(), T = /* @__PURE__ */ new WeakSet(), tA = (r = Object.is, A = (s, l) => new Proxy(s, l), t = (s) => H(s) && !T.has(s) && (Array.isArray(s) || !(Symbol.iterator in s)) && !(s instanceof WeakMap) && !(s instanceof WeakSet) && !(s instanceof Error) && !(s instanceof Number) && !(s instanceof Date) && !(s instanceof String) && !(s instanceof RegExp) && !(s instanceof ArrayBuffer), e = (s) => {
+  switch (s.status) {
+    case "fulfilled":
+      return s.value;
+    case "rejected":
+      throw s.reason;
+    default:
+      throw s;
+  }
+}, o = /* @__PURE__ */ new WeakMap(), c = (s, l, i = e) => {
+  const u = o.get(s);
+  if (u?.[0] === l)
+    return u[1];
+  const R = Array.isArray(s) ? [] : Object.create(Object.getPrototypeOf(s));
+  return V(R, !0), o.set(s, [l, R]), Reflect.ownKeys(s).forEach((I) => {
+    if (Object.getOwnPropertyDescriptor(R, I))
       return;
-    const p = Reflect.get(r, S), { enumerable: f } = Reflect.getOwnPropertyDescriptor(
-      r,
-      S
-    ), u = {
-      value: p,
-      enumerable: f,
+    const h = Reflect.get(s, I), { enumerable: p } = Reflect.getOwnPropertyDescriptor(
+      s,
+      I
+    ), f = {
+      value: h,
+      enumerable: p,
       // This is intentional to avoid copying with proxy-compare.
       // It's still non-writable, so it avoids assigning a value.
       configurable: !0
     };
-    if (T.has(p))
-      V(p, !1);
-    else if (p instanceof Promise)
-      delete u.value, u.get = () => h(p);
-    else if (D.has(p)) {
-      const [m, k] = D.get(
-        p
-      );
-      u.value = a(
-        m,
-        k(),
+    if (T.has(h))
+      V(h, !1);
+    else if (h instanceof Promise)
+      delete f.value, f.get = () => i(h);
+    else if (P.has(h)) {
+      const [m, S] = P.get(
         h
       );
+      f.value = c(
+        m,
+        S(),
+        i
+      );
     }
-    Object.defineProperty(y, S, u);
-  }), Object.preventExtensions(y);
-}, n = /* @__PURE__ */ new WeakMap(), i = [1, 1], c = (r) => {
-  if (!$(r))
+    Object.defineProperty(R, I, f);
+  }), Object.preventExtensions(R);
+}, n = /* @__PURE__ */ new WeakMap(), g = [1, 1], a = (s) => {
+  if (!H(s))
     throw new Error("object required");
-  const g = n.get(r);
-  if (g)
-    return g;
-  let h = i[0];
-  const R = /* @__PURE__ */ new Set(), y = (d, E = ++i[0]) => {
-    h !== E && (h = E, R.forEach((l) => l(d, E)));
+  const l = n.get(s);
+  if (l)
+    return l;
+  let i = g[0];
+  const u = /* @__PURE__ */ new Set(), R = (y, d = ++g[0]) => {
+    i !== d && (i = d, u.forEach((E) => E(y, d)));
   };
-  let S = i[1];
-  const p = (d = ++i[1]) => (S !== d && !R.size && (S = d, u.forEach(([E]) => {
-    const l = E[1](d);
-    l > h && (h = l);
-  })), h), f = (d) => (E, l) => {
-    const C = [...E];
-    C[1] = [d, ...C[1]], y(C, l);
-  }, u = /* @__PURE__ */ new Map(), m = (d, E) => {
-    if ((M ? "production" : void 0) !== "production" && u.has(d))
+  let I = g[1];
+  const h = (y = ++g[1]) => (I !== y && !u.size && (I = y, f.forEach(([d]) => {
+    const E = d[1](y);
+    E > i && (i = E);
+  })), i), p = (y) => (d, E) => {
+    const C = [...d];
+    C[1] = [y, ...C[1]], R(C, E);
+  }, f = /* @__PURE__ */ new Map(), m = (y, d) => {
+    if ((x ? "production" : void 0) !== "production" && f.has(y))
       throw new Error("prop listener already exists");
-    if (R.size) {
-      const l = E[3](f(d));
-      u.set(d, [E, l]);
+    if (u.size) {
+      const E = d[3](p(y));
+      f.set(y, [d, E]);
     } else
-      u.set(d, [E]);
-  }, k = (d) => {
-    var E;
-    const l = u.get(d);
-    l && (u.delete(d), (E = l[1]) == null || E.call(l));
-  }, P = (d) => (R.add(d), R.size === 1 && u.forEach(([l, C], Q) => {
-    if ((M ? "production" : void 0) !== "production" && C)
+      f.set(y, [d]);
+  }, S = (y) => {
+    var d;
+    const E = f.get(y);
+    E && (f.delete(y), (d = E[1]) == null || d.call(E));
+  }, D = (y) => (u.add(y), u.size === 1 && f.forEach(([E, C], Q) => {
+    if ((x ? "production" : void 0) !== "production" && C)
       throw new Error("remove already exists");
-    const j = l[3](f(Q));
-    u.set(Q, [l, j]);
+    const j = E[3](p(Q));
+    f.set(Q, [E, j]);
   }), () => {
-    R.delete(d), R.size === 0 && u.forEach(([l, C], Q) => {
-      C && (C(), u.set(Q, [l]));
+    u.delete(y), u.size === 0 && f.forEach(([E, C], Q) => {
+      C && (C(), f.set(Q, [E]));
     });
-  }), F = Array.isArray(r) ? [] : Object.create(Object.getPrototypeOf(r)), z = A(F, {
-    deleteProperty(d, E) {
-      const l = Reflect.get(d, E);
-      k(E);
-      const C = Reflect.deleteProperty(d, E);
-      return C && y(["delete", [E], l]), C;
+  }), N = Array.isArray(s) ? [] : Object.create(Object.getPrototypeOf(s)), z = A(N, {
+    deleteProperty(y, d) {
+      const E = Reflect.get(y, d);
+      S(d);
+      const C = Reflect.deleteProperty(y, d);
+      return C && R(["delete", [d], E]), C;
     },
-    set(d, E, l, C) {
-      const Q = Reflect.has(d, E), j = Reflect.get(d, E, C);
-      if (Q && (s(j, l) || n.has(l) && s(j, n.get(l))))
+    set(y, d, E, C) {
+      const Q = Reflect.has(y, d), j = Reflect.get(y, d, C);
+      if (Q && (r(j, E) || n.has(E) && r(j, n.get(E))))
         return !0;
-      k(E), $(l) && (l = AA(l) || l);
-      let v = l;
-      if (l instanceof Promise)
-        l.then((W) => {
-          l.status = "fulfilled", l.value = W, y(["resolve", [E], W]);
-        }).catch((W) => {
-          l.status = "rejected", l.reason = W, y(["reject", [E], W]);
+      S(d), H(E) && (E = AA(E) || E);
+      let $ = E;
+      if (E instanceof Promise)
+        E.then((B) => {
+          E.status = "fulfilled", E.value = B, R(["resolve", [d], B]);
+        }).catch((B) => {
+          E.status = "rejected", E.reason = B, R(["reject", [d], B]);
         });
       else {
-        !D.has(l) && t(l) && (v = c(l));
-        const W = !T.has(v) && D.get(v);
-        W && m(E, W);
+        !P.has(E) && t(E) && ($ = a(E));
+        const B = !T.has($) && P.get($);
+        B && m(d, B);
       }
-      return Reflect.set(d, E, v, C), y(["set", [E], l, j]), !0;
+      return Reflect.set(y, d, $, C), R(["set", [d], E, j]), !0;
     }
   });
-  n.set(r, z);
+  n.set(s, z);
   const L = [
-    F,
-    p,
-    a,
-    P
+    N,
+    h,
+    c,
+    D
   ];
-  return D.set(z, L), Reflect.ownKeys(r).forEach((d) => {
-    const E = Object.getOwnPropertyDescriptor(
-      r,
-      d
+  return P.set(z, L), Reflect.ownKeys(s).forEach((y) => {
+    const d = Object.getOwnPropertyDescriptor(
+      s,
+      y
     );
-    "value" in E && (z[d] = r[d], delete E.value, delete E.writable), Object.defineProperty(F, d, E);
+    "value" in d && (z[y] = s[y], delete d.value, delete d.writable), Object.defineProperty(N, y, d);
   }), z;
 }) => [
   // public functions
-  c,
+  a,
   // shared state
-  D,
+  P,
   T,
   // internal things
-  s,
+  r,
   A,
   t,
   e,
   o,
-  a,
+  c,
   n,
-  i
+  g
 ], [eA] = tA();
-function K(s = {}) {
-  return eA(s);
+function K(r = {}) {
+  return eA(r);
 }
-function oA(s, A, t) {
-  const e = D.get(s);
-  (M ? "production" : void 0) !== "production" && !e && console.warn("Please use proxy object");
+function oA(r, A, t) {
+  const e = P.get(r);
+  (x ? "production" : void 0) !== "production" && !e && console.warn("Please use proxy object");
   let o;
-  const a = [], n = e[3];
-  let i = !1;
-  const r = n((g) => {
-    a.push(g), o || (o = Promise.resolve().then(() => {
-      o = void 0, i && A(a.splice(0));
+  const c = [], n = e[3];
+  let g = !1;
+  const s = n((l) => {
+    c.push(l), o || (o = Promise.resolve().then(() => {
+      o = void 0, g && A(c.splice(0));
     }));
   });
-  return i = !0, () => {
-    i = !1, r();
+  return g = !0, () => {
+    g = !1, s();
   };
 }
-function nA(s, A) {
-  const t = D.get(s);
-  (M ? "production" : void 0) !== "production" && !t && console.warn("Please use proxy object");
-  const [e, o, a] = t;
-  return a(e, o(), A);
+function nA(r, A) {
+  const t = P.get(r);
+  (x ? "production" : void 0) !== "production" && !t && console.warn("Please use proxy object");
+  const [e, o, c] = t;
+  return c(e, o(), A);
 }
 globalThis.orca = globalThis.orca || {};
 class sA {
@@ -219,14 +219,14 @@ class sA {
     };
     try {
       this.requestState.requestCount++;
-      const a = await fetch(e, o);
-      if (!a.ok) {
-        const n = a.status === 401 ? "AUTH_ERROR" : a.status === 429 ? "RATE_LIMIT_ERROR" : "NETWORK_ERROR";
-        throw new Error(`${n}: HTTP ${a.status} - ${await a.text()}`);
+      const c = await fetch(e, o);
+      if (!c.ok) {
+        const n = c.status === 401 ? "AUTH_ERROR" : c.status === 429 ? "RATE_LIMIT_ERROR" : "NETWORK_ERROR";
+        throw new Error(`${n}: HTTP ${c.status} - ${await c.text()}`);
       }
-      return await a.json();
-    } catch (a) {
-      throw this.requestState.lastError = a.message, console.error("Readwise API Request Failed:", a), a;
+      return await c.json();
+    } catch (c) {
+      throw this.requestState.lastError = c.message, console.error("Readwise API Request Failed:", c), c;
     }
   }
   //📖 分页获取所有高亮内容
@@ -235,13 +235,13 @@ class sA {
     let t = [], e = null, o = 1;
     console.log(`🔄 Fetching highlights ${A ? `updated after ${A}` : "all time"}`);
     do {
-      const a = new URLSearchParams({
+      const c = new URLSearchParams({
         page_size: "1000"
         // Readwise API 允许的最大页大小
       });
-      A && a.append("updated_after", A), e && a.append("page", o.toString());
+      A && c.append("updated_after", A), e && c.append("page", o.toString());
       try {
-        const n = await this.makeRequest(`/highlights?${a.toString()}`);
+        const n = await this.makeRequest(`/highlights?${c.toString()}`);
         n?.results ? (t = t.concat(n.results), console.log(`📄 Page ${o}: ${n.results.length} highlights`), e = n.next ? o + 1 : null, o++, await this.delay(100)) : e = null;
       } catch (n) {
         throw console.error(`❌ Failed to fetch page ${o}:`, n), n;
@@ -258,10 +258,10 @@ class sA {
       const o = new URLSearchParams();
       e && o.append("pageCursor", e), A && o.append("updatedAfter", A), console.log(`Making export API request with params: ${o.toString()}`);
       try {
-        const a = await this.makeRequest(`/export/?${o.toString()}`);
-        a?.results ? (t = t.concat(a.results), e = a.nextPageCursor, console.log(`📄 Fetched ${a.results.length} books, total highlights so far: ${t.reduce((n, i) => n + (i.highlights?.length || 0), 0)}`)) : e = null, e && await this.delay(100);
-      } catch (a) {
-        throw console.error("❌ Failed to export page:", a), a;
+        const c = await this.makeRequest(`/export/?${o.toString()}`);
+        c?.results ? (t = t.concat(c.results), e = c.nextPageCursor, console.log(`📄 Fetched ${c.results.length} books, total highlights so far: ${t.reduce((n, g) => n + (g.highlights?.length || 0), 0)}`)) : e = null, e && await this.delay(100);
+      } catch (c) {
+        throw console.error("❌ Failed to export page:", c), c;
       }
     } while (e);
     return console.log(`✅ Export complete: ${t.length} books`), t;
@@ -366,8 +366,8 @@ class rA {
       A === "full" ? (e = null, console.log("Performing full sync (all highlights)")) : A === "incremental" ? (e = this.settings.lastSyncDate, console.log("Performing incremental sync", e ? `after ${e}` : "(first sync)")) : (this.settings.defaultSyncMode || "incremental") === "full" ? (e = null, console.log("Performing full sync (default mode)")) : (e = this.settings.lastSyncDate, console.log("Performing incremental sync (default mode)", e ? `after ${e}` : "(first sync)"));
       const o = await this.syncHighlightsToOrca(e);
       this.updateSyncStats(o, A), await this.saveLastSyncDate();
-      const n = Date.now() - t, i = Math.floor(n / 6e4), c = Math.floor(n % 6e4 / 1e3);
-      return orca.notify("success", `同步完成，本次同步 ${o.newCount} 条数据，耗时 ${i} 分 ${c} 秒。`), o;
+      const n = Date.now() - t, g = Math.floor(n / 6e4), a = Math.floor(n % 6e4 / 1e3);
+      return orca.notify("success", `同步完成，本次同步 ${o.newCount} 条数据，耗时 ${g} 分 ${a} 秒。`), o;
     } catch (e) {
       throw w.error = e, orca.notify("error", `同步失败：${e.message}`), e;
     } finally {
@@ -381,27 +381,27 @@ class rA {
     w.progress.message = "获取高亮内容...";
     try {
       const e = await this.readwiseAPI.exportHighlights(A), o = [];
-      for (const r of e)
-        if (r.highlights && Array.isArray(r.highlights))
-          for (const g of r.highlights)
+      for (const s of e)
+        if (s.highlights && Array.isArray(s.highlights))
+          for (const l of s.highlights)
             o.push({
-              ...g,
-              book_title: r.title,
-              author: r.author,
-              category: r.category || "books"
+              ...l,
+              book_title: s.title,
+              author: s.author,
+              category: s.category || "books"
             });
       w.progress = {
         current: 0,
         total: o.length,
         message: `已获取 ${o.length} 条高亮`
       };
-      const { createdBlocks: a, failedBlocks: n } = await this.createOrcaBlocks(o), i = this.categorizeHighlights(o), c = Date.now() - t;
+      const { createdBlocks: c, failedBlocks: n } = await this.createOrcaBlocks(o), g = this.categorizeHighlights(o), a = Date.now() - t;
       return {
         totalCount: o.length,
-        newCount: a.length,
+        newCount: c.length,
         failedCount: n.length,
-        duration: c,
-        categories: i
+        duration: a,
+        categories: g
       };
     } catch (e) {
       throw console.error("Failed to fetch highlights:", e), new Error(`FETCH_ERROR: ${e.message}`);
@@ -412,11 +412,11 @@ class rA {
   processHighlights(A, t) {
     const e = A.filter(
       (n) => this.shouldSyncHighlight(n)
-    ), o = this.categorizeHighlights(e), a = Date.now() - t;
+    ), o = this.categorizeHighlights(e), c = Date.now() - t;
     return {
       totalCount: A.length,
       newCount: e.length,
-      duration: a,
+      duration: c,
       categories: o,
       highlights: e
     };
@@ -475,15 +475,15 @@ class rA {
   async createOrcaBlocks(A) {
     const t = [], e = [];
     console.log("Starting to create blocks for", A.length, "highlights");
-    let o = null, a = await this.getActivePanel();
-    if (a && (o = this.findRootBlock(a), console.log("Found root block from active panel:", o)), !o) {
+    let o = null, c = await this.getActivePanel();
+    if (c && (o = this.findRootBlock(c), console.log("Found root block from active panel:", o)), !o) {
       console.log("No root block from active panel, searching for any root block");
-      const f = orca.state?.blocks;
-      if (f)
-        for (const u in f) {
-          const m = f[u];
+      const p = orca.state?.blocks;
+      if (p)
+        for (const f in p) {
+          const m = p[f];
           if (!m.parent && !m.left) {
-            o = u, console.log("Found root block by iteration:", o, m);
+            o = f, console.log("Found root block by iteration:", o, m);
             break;
           }
         }
@@ -491,59 +491,165 @@ class rA {
     if (!o)
       throw new Error("No root block found. Please open a document first.");
     console.log("Using root block ID:", o);
-    const n = /* @__PURE__ */ new Date(), i = n.getFullYear(), c = String(n.getMonth() + 1).padStart(2, "0"), r = String(n.getDate()).padStart(2, "0"), g = String(n.getHours()).padStart(2, "0"), h = String(n.getMinutes()).padStart(2, "0"), R = String(n.getSeconds()).padStart(2, "0"), S = `ReadwiseSyncToOrca${`${i}${c}${r}${g}${h}${R}`}`;
-    let p = null;
+    const n = /* @__PURE__ */ new Date(), g = n.getFullYear(), a = String(n.getMonth() + 1).padStart(2, "0"), s = String(n.getDate()).padStart(2, "0"), l = String(n.getHours()).padStart(2, "0"), i = String(n.getMinutes()).padStart(2, "0"), u = String(n.getSeconds()).padStart(2, "0"), I = `ReadwiseSyncToOrca${`${g}${a}${s}${l}${i}${u}`}`;
+    let h = null;
     try {
-      if (p = await orca.commands.invokeEditorCommand(
+      if (h = await orca.commands.invokeEditorCommand(
         "core.editor.insertBlock",
         null,
         o,
         "lastChild",
-        [{ t: "t", v: S }]
-      ), console.log("Created sync root block with ID:", p), p) {
-        await orca.commands.invokeEditorCommand("core.editor.makeHeading2", null, p);
+        [{ t: "t", v: I }]
+      ), console.log("Created sync root block with ID:", h), h) {
+        await orca.commands.invokeEditorCommand("core.editor.makeHeading2", null, h);
         try {
           await orca.commands.invokeEditorCommand(
             "core.editor.insertTag",
             null,
-            p,
+            h,
             "Readwise"
           ), console.log("Added Readwise tag to sync block");
-        } catch (m) {
-          console.warn("Failed to add tag to sync block:", m);
+        } catch (S) {
+          console.warn("Failed to add tag to sync block:", S);
         }
-        await this.delay(100), w.progress.total = A.length, w.progress.message = "创建 Orca 块...", console.log("Creating child blocks for", A.length, "highlights");
-        const f = A.filter((m) => {
-          const k = this.formatBlockContent(m);
-          return k && k.trim() !== "";
+        await this.delay(100), w.progress.total = A.length, w.progress.message = "创建 Orca 块...", console.log("Creating category structure for", A.length, "highlights");
+        const p = A.filter((S) => {
+          const D = this.formatBlockContent(S);
+          return D && D.trim() !== "";
         });
-        console.log("Valid highlights to create:", f.length), console.log("Creating child blocks using individual insertBlock calls..."), await this.createBlocksIndividually(p, f, t, e), w.progress.current = t.length, w.progress.message = `已创建 ${t.length}/${f.length} 个块`, console.log("Created", t.length, "blocks, failed", e.length), await this.delay(200);
-        const u = orca.state.blocks[p];
-        u ? (console.log("Sync block verification:", {
-          id: u.id,
-          text: u.text,
-          content: u.content,
-          children: u.children?.length || 0,
-          parent: u.parent,
-          left: u.left
-        }), u.children && Array.isArray(u.children) ? (console.log("Children block IDs:", u.children), u.children.forEach((m, k) => {
-          const P = orca.state.blocks[m];
-          P ? console.log(`Child ${k}:`, {
-            id: P.id,
-            parent: P.parent,
-            left: P.left,
-            text: P.text?.substring(0, 30)
-          }) : console.warn(`Child block ${m} not found in state!`);
+        console.log("Valid highlights to create:", p.length);
+        const f = this.groupHighlightsByCategory(p);
+        console.log("Grouped highlights by category:", Object.keys(f).map((S) => `${S}: ${f[S].length}`)), await this.createCategoryBlocks(h, f, t, e), w.progress.current = t.length, w.progress.message = `已创建 ${t.length}/${p.length} 个块`, console.log("Created", t.length, "blocks, failed", e.length), await this.delay(200);
+        const m = orca.state.blocks[h];
+        m ? (console.log("Sync block verification:", {
+          id: m.id,
+          text: m.text,
+          content: m.content,
+          children: m.children?.length || 0,
+          parent: m.parent,
+          left: m.left
+        }), m.children && Array.isArray(m.children) ? (console.log("Children block IDs:", m.children), m.children.forEach((S, D) => {
+          const N = orca.state.blocks[S];
+          N ? console.log(`Child ${D}:`, {
+            id: N.id,
+            parent: N.parent,
+            left: N.left,
+            text: N.text?.substring(0, 30)
+          }) : console.warn(`Child block ${S} not found in state!`);
         })) : console.warn("Sync block has no children array")) : console.warn("Sync block not found in orca.state.blocks after creation!");
       }
-    } catch (f) {
-      throw console.error("Failed to create sync block:", f), new Error("Failed to create sync block: " + f.message);
+    } catch (p) {
+      throw console.error("Failed to create sync block:", p), new Error("Failed to create sync block: " + p.message);
     }
     return { createdBlocks: t, failedBlocks: e };
   }
+  // 按分类分组高亮
+  groupHighlightsByCategory(A) {
+    const t = {
+      books: [],
+      articles: [],
+      tweets: [],
+      supplementals: [],
+      podcasts: []
+    };
+    for (const e of A) {
+      const o = e.category || "books";
+      t[o] ? t[o].push(e) : t.books.push(e);
+    }
+    return t;
+  }
+  // 创建分类块和高亮块的三级结构
+  async createCategoryBlocks(A, t, e, o) {
+    console.log("Creating category blocks...");
+    const c = ["books", "articles", "tweets", "supplementals", "podcasts"];
+    orca.state.blocks[A].children || (orca.state.blocks[A].children = []);
+    let n = null;
+    const g = orca.state?.blocks;
+    if (g)
+      for (const l in g) {
+        const i = g[l];
+        if (!i.parent && !i.left) {
+          n = l, console.log("Found root block for creating category blocks:", n);
+          break;
+        }
+      }
+    if (!n) {
+      console.error("No root block found for creating category blocks");
+      return;
+    }
+    const a = {}, s = [];
+    for (let l = 0; l < c.length; l++) {
+      const i = c[l], u = t[i];
+      if (!u || u.length === 0) {
+        console.log(`Skipping category ${i} (no highlights)`);
+        continue;
+      }
+      console.log(`Creating category block for ${i} (${u.length} highlights)`);
+      try {
+        const R = await orca.commands.invokeEditorCommand(
+          "core.editor.insertBlock",
+          null,
+          n,
+          "lastChild",
+          [{ t: "t", v: i }]
+        );
+        await orca.commands.invokeEditorCommand("core.editor.makeHeading3", null, R);
+        try {
+          await orca.commands.invokeEditorCommand(
+            "core.editor.insertTag",
+            null,
+            R,
+            `Readwise/${i}`
+          );
+        } catch (I) {
+          console.warn(`Failed to add tag to category block ${i}:`, I);
+        }
+        a[i] = R, s.push({
+          id: R,
+          category: i
+        }), console.log(`Created category block ${R} for ${i}`);
+      } catch (R) {
+        console.error(`Failed to create category block for ${i}:`, R);
+      }
+    }
+    if (console.log("Created category blocks:", a), await this.delay(200), s.length > 0) {
+      console.log(`Moving ${s.length} category blocks to sync root...`);
+      const l = s.map((i) => i.id);
+      try {
+        await orca.commands.invokeEditorCommand(
+          "core.editor.moveBlocks",
+          null,
+          l,
+          A,
+          "lastChild"
+        ), console.log(`Moved ${l.length} category blocks to sync root using moveBlocks`);
+      } catch (i) {
+        console.error("Failed to move category blocks using moveBlocks:", i);
+      }
+      for (let i = 0; i < s.length; i++) {
+        const u = s[i], R = u.id, I = i > 0 ? s[i - 1].id : null;
+        orca.state.blocks[R] && (orca.state.blocks[R].parent = A, orca.state.blocks[R].left = I, console.log(`Set category block ${R} (${u.category}): parent=${A}, left=${I}`)), orca.state.blocks[A].children.includes(R) || orca.state.blocks[A].children.push(R);
+      }
+      console.log("All category blocks moved and properties set");
+    }
+    for (const l of c) {
+      const i = a[l], u = t[l];
+      !i || !u || u.length === 0 || (console.log(`Creating highlights for category ${l} (${u.length} highlights)...`), await this.createBlocksIndividually(
+        i,
+        l,
+        u,
+        e,
+        o
+      ), console.log(`Completed category ${l}`));
+    }
+    console.log("All category blocks and highlights created");
+  }
   // 并发创建独立块，然后移动到同步标记块下
-  async createBlocksIndividually(A, t, e, o) {
-    console.log(`Creating ${t.length} blocks using 10 concurrent threads...`);
+  async createBlocksIndividually(A, t, e, o, c) {
+    console.log(`Creating ${e.length} blocks for category ${t} using 10 concurrent threads...`);
+    const n = e.length;
+    let g;
+    n > 600 ? g = 200 : n > 200 ? g = 100 : g = 50, console.log(`Category ${t}: using refresh interval of ${g}`);
     const a = orca.state.blocks[A];
     if (!a)
       throw console.error("Parent block not found:", A), new Error("Parent block not found");
@@ -554,59 +660,46 @@ class rA {
       left: a.left,
       childrenCount: a.children?.length || 0
     });
-    let n = null;
-    const i = orca.state?.blocks;
-    if (i)
-      for (const R in i) {
-        const y = i[R];
-        if (!y.parent && !y.left) {
-          n = R, console.log("Found root block for creating independent blocks:", n);
+    let s = null;
+    const l = orca.state?.blocks;
+    if (l)
+      for (const h in l) {
+        const p = l[h];
+        if (!p.parent && !p.left) {
+          s = h, console.log("Found root block for creating independent blocks:", s);
           break;
         }
       }
-    if (!n)
+    if (!s)
       throw new Error("No root block found for creating independent blocks");
-    const c = async (R, y) => {
-      const S = this.formatBlockContent(R);
+    const i = async (h, p) => {
+      const f = this.formatBlockContent(h);
       try {
         return { success: !0, blockId: await orca.commands.invokeEditorCommand(
           "core.editor.insertBlock",
           null,
-          n,
+          s,
           "lastChild",
-          [{ t: "t", v: S }]
-        ), highlight: R, index: y };
-      } catch (p) {
-        return console.error(`Failed to create block for highlight ${y}:`, p), { success: !1, error: p, highlight: R, index: y };
+          [{ t: "t", v: f }]
+        ), highlight: h, index: p };
+      } catch (m) {
+        return console.error(`Failed to create block for highlight ${p}:`, m), { success: !1, error: m, highlight: h, index: p };
       }
-    }, r = 10, g = [];
-    for (let R = 0; R < t.length; R += r) {
-      const S = t.slice(R, R + r).map(
-        (f, u) => c(f, R + u)
-      ), p = await Promise.all(S);
-      for (const f of p)
-        f.success ? (g.push({
-          id: f.blockId,
-          content: this.formatBlockContent(f.highlight),
-          originalIndex: f.index
-        }), e.push({ id: f.blockId, content: this.formatBlockContent(f.highlight) })) : o.push({ highlight: f.highlight, error: f.error });
-      (e.length % 200 === 0 || e.length === t.length) && (w.progress.current = e.length, w.progress.message = `${e.length}/${t.length} 同步中`), await this.delay(10);
+    }, u = 10, R = [];
+    let I = 0;
+    for (let h = 0; h < e.length; h += u) {
+      const f = e.slice(h, h + u).map(
+        (S, D) => i(S, h + D)
+      ), m = await Promise.all(f);
+      for (const S of m)
+        S.success ? (R.push({
+          id: S.blockId,
+          content: this.formatBlockContent(S.highlight),
+          originalIndex: S.index
+        }), o.push({ id: S.blockId, content: this.formatBlockContent(S.highlight) }), I++) : c.push({ highlight: S.highlight, error: S.error });
+      (I % g === 0 || I === e.length) && (w.progress.current = I, w.progress.message = `${t}: ${I}/${e.length}`), await this.delay(10);
     }
-    console.log(`Created ${g.length} independent blocks`), g.sort((R, y) => R.originalIndex - y.originalIndex), console.log("Moving all blocks to sync root block..."), await this.moveBlocksToParent(A, g), console.log("Creation and movement completed:", e.length, "blocks created"), console.log("Final verification..."), await this.delay(300);
-    const h = orca.state.blocks[A];
-    h && (console.log("Parent block final state:", {
-      id: h.id,
-      childrenCount: h.children?.length || 0,
-      children: h.children,
-      expectedCount: e.length
-    }), h.children && Array.isArray(h.children) ? (console.log("Children block IDs:", h.children), h.children.forEach((R, y) => {
-      const S = orca.state.blocks[R];
-      S ? console.log(`Child ${y} (block ${R}):`, {
-        parent: S.parent,
-        left: S.left,
-        text: S.text?.substring(0, 50)
-      }) : console.warn(`Child block ${R} not found in state!`);
-    })) : console.warn("Sync block has no children array"));
+    return console.log(`Created ${R.length} independent blocks for category ${t}`), R.sort((h, p) => h.originalIndex - p.originalIndex), console.log(`Moving ${R.length} blocks to category block ${A}...`), await this.moveBlocksToParent(A, R), console.log(`Creation and movement completed for category ${t}:`, R.length, "blocks created"), R.length;
   }
   // 移动块到父块下并设置正确的parent/left/children属性
   async moveBlocksToParent(A, t) {
@@ -624,8 +717,8 @@ class rA {
       console.error("Failed to move blocks using moveBlocks:", o), console.log("Attempting to set properties manually...");
     }
     for (let o = 0; o < t.length; o++) {
-      const n = t[o].id, i = o > 0 ? t[o - 1].id : null;
-      orca.state.blocks[n] && (orca.state.blocks[n].parent = A, orca.state.blocks[n].left = i, console.log(`Set block ${n}: parent=${A}, left=${i}`)), orca.state.blocks[A].children.includes(n) || orca.state.blocks[A].children.push(n);
+      const n = t[o].id, g = o > 0 ? t[o - 1].id : null;
+      orca.state.blocks[n] && (orca.state.blocks[n].parent = A, orca.state.blocks[n].left = g, console.log(`Set block ${n}: parent=${A}, left=${g}`)), orca.state.blocks[A].children.includes(n) || orca.state.blocks[A].children.push(n);
     }
     console.log("All blocks moved and properties set successfully");
   }
@@ -663,10 +756,10 @@ class rA {
   // 获取或创建今日日记页面
   async getOrCreateTodayJournalPage() {
     try {
-      const A = /* @__PURE__ */ new Date(), t = A.getFullYear(), e = String(A.getMonth() + 1).padStart(2, "0"), o = String(A.getDate()).padStart(2, "0"), a = `${t}-${e}-${o}`;
-      console.log("Getting or creating journal page for date:", a);
+      const A = /* @__PURE__ */ new Date(), t = A.getFullYear(), e = String(A.getMonth() + 1).padStart(2, "0"), o = String(A.getDate()).padStart(2, "0"), c = `${t}-${e}-${o}`;
+      console.log("Getting or creating journal page for date:", c);
       try {
-        const n = await orca.commands.invokeCommand("core.journal.getJournalBlock", a);
+        const n = await orca.commands.invokeCommand("core.journal.getJournalBlock", c);
         if (n)
           return console.log("Found today's journal block:", n), {
             rootBlockId: n.id || n,
@@ -679,13 +772,13 @@ class rA {
       try {
         const n = orca.state?.blocks;
         if (n)
-          for (const i in n) {
-            const c = n[i];
-            if (c.text && (c.text.includes(a) || c.text.includes("Journal")))
-              return console.log("Found potential journal block by text:", i, c), {
-                rootBlockId: i,
+          for (const g in n) {
+            const a = n[g];
+            if (a.text && (a.text.includes(c) || a.text.includes("Journal")))
+              return console.log("Found potential journal block by text:", g, a), {
+                rootBlockId: g,
                 view: "journal",
-                id: i
+                id: g
               };
           }
       } catch (n) {
@@ -841,10 +934,10 @@ class rA {
     this.settings.lastSyncDate = (/* @__PURE__ */ new Date()).toISOString(), await orca.plugins.setData("readwise-sync", "settings", this.settings);
   }
 }
-const I = new rA(), aA = "data:image/png;base64,AAABAAMAMDAAAAEACACoDgAANgAAACAgAAABAAgAqAgAAN4OAAAQEAAAAQAIAGgFAACGFwAAKAAAADAAAABgAAAAAQAIAAAAAAAACQAAAAAAAAAAAAAAAQAAAAAAAAAAAAC3t7QAFxcXAEBAPwBpaWcAu7u3AOTk3wDS0s4AbW1qAPv79gDt7egAJCQjALKyrwDb29cAOzs6ABYWFQDNzckA9vbxAAQEBAD6+vQAlpaTAL+/uwCEhIIAHx8eAK2tqgANDQ0AX19dAJ+fnADIyMQAkZGOALq6tgDj494Af399AKiopQDR0c0A+vr1AAgICABaWlgA/v74AHFxbwAMDAsAmpqXADU1MwDa2tYAY2NhAIyMiQC1tbEA9fXwAAMDAwBVVVMA4+PfAL6+ugCsrKkA/v75AIeHhAAjIyMAx8fDACcnJgDe3toAPj49AGdnZQCQkI0Aubm1AFVVVAB+fnwAp6ekAEJCQABra2gA+fn0ADAwLwCCgn8A/f33AP7++gDCwr4A6+vmANnZ1QAQEBAAOTk4APDw7ACLi4gAtLSwAAICAgDi4t4AfX16AAYGBQDm5uEA/f34AP///gAiIiIAnZ2aACYmJQB4eHUAZmZkAI+PjAC4uLQApqajAPj48wAGBgYALy8uAB0dHQD8/PYARkZFAG9vbQCYmJUAwcG9AOrq5QCGhoQAr6+sAEpKSAAPDw8AYWFfAIqKhwATExIA8/PuAAEBAQAqKikAGBgYAEFBQABqamgAWFhXAIGBfwAcHBsA09PPAPz89wCFhYIArq6qAEpKSQCcnJkAxcXBAO7u6QAlJSQAs7OwANzc2AA8PDsAZWVjAI6OiwAXFxYAzs7KAAUFBQAuLi0A5eXhAICAfQBubmwACQkIAOnp5ACJiYYAEhIRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYVhaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpYYQAAWBAyUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUjIQWAAAWjJ7IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3syWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjREREREREI1ZWVlZWVlZWVlZWRyNERERERCNWVlZWVlZWViNERERERCNSWgAAWlIjREREREQJHCCNjY2NjY2NjY2NfIQJRERECUt8jY2NjY2NeCIJRERERCNSWgAAWlIjRERERERWFAAAAAAAAAAAAAAAKBVHREREEYYAAAAAAAAAMCFWRERERCNSWgAAWlIjREREREQjOkEIbQAAAAAAAGNAa2kjRER7g20AAAAAAIpsfx8jRERERCNSWgAAWlIjRERERERECSZgbgAAAAAAAC01ViNERCOQdQAAAAAAcgQKNSNERERERCNSWgAAWlIjRERERERERERWbwAAAAAAYS5WRERERAmHMAAAAAAATR8JRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WREREZAc3AAAAAAAZGHtERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WREREEVwAAAAAAAAsLxNERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRER7UG0AAAAAADcHe0RERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRCOQQgAAAAAAEj0JRERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRAldMAAAAAAAZUojRERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WCXoLAAAAAABwHntERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WETwAAAAAAAAnYERERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJAVXLm0AAAAAAIsNCURERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAEiw2KgAAAAAAMC1EViNERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAAAAAUYI/WVV7RERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAAAAAAAAAEg4zCURERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAABdaVAAAAAAAAAAAAAA3OHtERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAJKRfVN3A0U5AnIAAAAAMXFERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAB5AUhgTpCMaxkAAAAADxB7RERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAC0l7IyM1Po8AAAAAMF9WRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAGKJe0RWKQAAAAAAAB1WRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAACFS3t7jQAAAAAAAIdWRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAflJWdgAAAAAAchtWRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAACVpGgAAAAAATIB7RERERERERCNSWgAAWlIjRERERERERERWTwAAAAAAAAAAAAAAAFF2MQAAAAAAZYEjRERERERERCNSWgAAWlIjREREREREI1Z7QwAAAAAAAAAAAAAAAAAkDwAAAAB0XntERERERERERCNSWgAAWlIjREREREQjBl5GiAAAAAAAAAAAAAAAAAAAAAAAcnM0RERERERERERERCNSWgAAWlIjRERERERWZzAAAAAAAAAAAAAAAAAAAAAAYQI7aisJRERERERERERERCNSWgAAWlIjREREREQJaI5mZmZmZmZmZmZmZmYnWxZnDAeBewlERERERERERERERCNSWgAAWlIjREREREREIwkJCQkJCQkJCQkJCQlke1ZWVgkjRERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWjJ7IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3syWgAAWBAyUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUjIQWAAAYVhaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpYYQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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";
+const k = new rA(), cA = "data:image/png;base64,AAABAAMAMDAAAAEACACoDgAANgAAACAgAAABAAgAqAgAAN4OAAAQEAAAAQAIAGgFAACGFwAAKAAAADAAAABgAAAAAQAIAAAAAAAACQAAAAAAAAAAAAAAAQAAAAAAAAAAAAC3t7QAFxcXAEBAPwBpaWcAu7u3AOTk3wDS0s4AbW1qAPv79gDt7egAJCQjALKyrwDb29cAOzs6ABYWFQDNzckA9vbxAAQEBAD6+vQAlpaTAL+/uwCEhIIAHx8eAK2tqgANDQ0AX19dAJ+fnADIyMQAkZGOALq6tgDj494Af399AKiopQDR0c0A+vr1AAgICABaWlgA/v74AHFxbwAMDAsAmpqXADU1MwDa2tYAY2NhAIyMiQC1tbEA9fXwAAMDAwBVVVMA4+PfAL6+ugCsrKkA/v75AIeHhAAjIyMAx8fDACcnJgDe3toAPj49AGdnZQCQkI0Aubm1AFVVVAB+fnwAp6ekAEJCQABra2gA+fn0ADAwLwCCgn8A/f33AP7++gDCwr4A6+vmANnZ1QAQEBAAOTk4APDw7ACLi4gAtLSwAAICAgDi4t4AfX16AAYGBQDm5uEA/f34AP///gAiIiIAnZ2aACYmJQB4eHUAZmZkAI+PjAC4uLQApqajAPj48wAGBgYALy8uAB0dHQD8/PYARkZFAG9vbQCYmJUAwcG9AOrq5QCGhoQAr6+sAEpKSAAPDw8AYWFfAIqKhwATExIA8/PuAAEBAQAqKikAGBgYAEFBQABqamgAWFhXAIGBfwAcHBsA09PPAPz89wCFhYIArq6qAEpKSQCcnJkAxcXBAO7u6QAlJSQAs7OwANzc2AA8PDsAZWVjAI6OiwAXFxYAzs7KAAUFBQAuLi0A5eXhAICAfQBubmwACQkIAOnp5ACJiYYAEhIRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYVhaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpYYQAAWBAyUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUjIQWAAAWjJ7IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3syWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjREREREREI1ZWVlZWVlZWVlZWRyNERERERCNWVlZWVlZWViNERERERCNSWgAAWlIjREREREQJHCCNjY2NjY2NjY2NfIQJRERECUt8jY2NjY2NeCIJRERERCNSWgAAWlIjRERERERWFAAAAAAAAAAAAAAAKBVHREREEYYAAAAAAAAAMCFWRERERCNSWgAAWlIjREREREQjOkEIbQAAAAAAAGNAa2kjRER7g20AAAAAAIpsfx8jRERERCNSWgAAWlIjRERERERECSZgbgAAAAAAAC01ViNERCOQdQAAAAAAcgQKNSNERERERCNSWgAAWlIjRERERERERERWbwAAAAAAYS5WRERERAmHMAAAAAAATR8JRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WREREZAc3AAAAAAAZGHtERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WREREEVwAAAAAAAAsLxNERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRER7UG0AAAAAADcHe0RERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRCOQQgAAAAAAEj0JRERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRAldMAAAAAAAZUojRERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WCXoLAAAAAABwHntERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WETwAAAAAAAAnYERERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJAVXLm0AAAAAAIsNCURERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAEiw2KgAAAAAAMC1EViNERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAAAAAUYI/WVV7RERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAAAAAAAAAEg4zCURERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAABdaVAAAAAAAAAAAAAA3OHtERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAJKRfVN3A0U5AnIAAAAAMXFERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAB5AUhgTpCMaxkAAAAADxB7RERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAC0l7IyM1Po8AAAAAMF9WRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAGKJe0RWKQAAAAAAAB1WRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAACFS3t7jQAAAAAAAIdWRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAflJWdgAAAAAAchtWRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAACVpGgAAAAAATIB7RERERERERCNSWgAAWlIjRERERERERERWTwAAAAAAAAAAAAAAAFF2MQAAAAAAZYEjRERERERERCNSWgAAWlIjREREREREI1Z7QwAAAAAAAAAAAAAAAAAkDwAAAAB0XntERERERERERCNSWgAAWlIjREREREQjBl5GiAAAAAAAAAAAAAAAAAAAAAAAcnM0RERERERERERERCNSWgAAWlIjRERERERWZzAAAAAAAAAAAAAAAAAAAAAAYQI7aisJRERERERERERERCNSWgAAWlIjREREREQJaI5mZmZmZmZmZmZmZmYnWxZnDAeBewlERERERERERERERCNSWgAAWlIjREREREREIwkJCQkJCQkJCQkJCQlke1ZWVgkjRERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWjJ7IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3syWgAAWBAyUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUjIQWAAAYVhaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpYYQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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";
 let b;
-async function uA(s) {
-  b = s, console.log(`${b} plugin enabled`), orca.themes.injectCSSResource(`${b}/dist/index.css`, b), await orca.plugins.setSettingsSchema(b, {
+async function dA(r) {
+  b = r, console.log(`${b} plugin enabled`), orca.themes.injectCSSResource(`${b}/dist/index.css`, b), await orca.plugins.setSettingsSchema(b, {
     apiKey: {
       label: "API Key",
       description: "Your Readwise access token. Get it from https://readwise.io/access_token",
@@ -881,10 +974,10 @@ async function uA(s) {
       type: "boolean",
       defaultValue: !0
     }
-  }), await RA(b);
+  }), await gA(b);
 }
-async function dA() {
-  console.log("Readwise Sync plugin disabled"), await EA();
+async function uA() {
+  console.log("Readwise Sync plugin disabled"), await RA();
   try {
     orca.themes.removeCSSResources(b);
   } catch {
@@ -902,8 +995,8 @@ async function dA() {
   } catch {
   }
 }
-async function x() {
-  const s = {
+async function M() {
+  const r = {
     apiKey: "",
     defaultSyncMode: "incremental",
     autoSyncEnabled: !1,
@@ -913,52 +1006,52 @@ async function x() {
     includeTags: !0
   };
   try {
-    return await orca.plugins.getData("readwise-sync", "settings") || s;
+    return await orca.plugins.getData("readwise-sync", "settings") || r;
   } catch {
-    return s;
+    return r;
   }
 }
-function cA(s) {
-  orca.state.commands?.[`${s}.sync`] == null && orca.commands.registerCommand(
-    `${s}.sync`,
+function aA(r) {
+  orca.state.commands?.[`${r}.sync`] == null && orca.commands.registerCommand(
+    `${r}.sync`,
     async () => {
       try {
-        const A = orca.state.plugins[s]?.settings || await x();
-        if (I.settings = { ...I.settings, ...A }, !I.settings.apiKey) {
+        const A = orca.state.plugins[r]?.settings || await M();
+        if (k.settings = { ...k.settings, ...A }, !k.settings.apiKey) {
           orca.notify("error", "Please configure your Readwise API Key in settings");
           return;
         }
         orca.notify("info", "Starting incremental sync...");
-        const t = await I.performSync("incremental");
+        const t = await k.performSync("incremental");
         orca.notify("success", `Sync completed: ${t.newCount || 0} new highlights`);
       } catch (A) {
         orca.notify("error", `Sync failed: ${A?.message || String(A)}`);
       }
     },
     "Sync Readwise Highlights (Incremental)"
-  ), orca.state.commands?.[`${s}.fullSync`] == null && orca.commands.registerCommand(
-    `${s}.fullSync`,
+  ), orca.state.commands?.[`${r}.fullSync`] == null && orca.commands.registerCommand(
+    `${r}.fullSync`,
     async () => {
       try {
-        const A = orca.state.plugins[s]?.settings || await x();
-        if (I.settings = { ...I.settings, ...A }, !I.settings.apiKey) {
+        const A = orca.state.plugins[r]?.settings || await M();
+        if (k.settings = { ...k.settings, ...A }, !k.settings.apiKey) {
           orca.notify("error", "Please configure your Readwise API Key in settings");
           return;
         }
         orca.notify("info", "Starting full sync...");
-        const t = await I.performSync("full");
+        const t = await k.performSync("full");
         orca.notify("success", `Full sync completed: ${t.newCount || 0} highlights`);
       } catch (A) {
         orca.notify("error", `Sync failed: ${A?.message || String(A)}`);
       }
     },
     "Full Sync Readwise Highlights"
-  ), orca.state.commands?.[`${s}.testConnection`] == null && orca.commands.registerCommand(
-    `${s}.testConnection`,
+  ), orca.state.commands?.[`${r}.testConnection`] == null && orca.commands.registerCommand(
+    `${r}.testConnection`,
     async () => {
       try {
-        const A = orca.state.plugins[s]?.settings || await x();
-        return I.settings = { ...I.settings, ...A }, I.settings.apiKey ? (await I.validateConnection(), orca.notify("success", "Readwise connection successful"), !0) : (orca.notify("error", "Please configure your Readwise API Key in settings"), !1);
+        const A = orca.state.plugins[r]?.settings || await M();
+        return k.settings = { ...k.settings, ...A }, k.settings.apiKey ? (await k.validateConnection(), orca.notify("success", "Readwise connection successful"), !0) : (orca.notify("error", "Please configure your Readwise API Key in settings"), !1);
       } catch (A) {
         return orca.notify("error", `Readwise connection failed: ${A?.message || "Unknown error"}`), !1;
       }
@@ -966,8 +1059,8 @@ function cA(s) {
     "Test Readwise Connection"
   );
 }
-function lA(s) {
-  if (orca.state.headbarButtons?.[`${s}.sync`] == null)
+function lA(r) {
+  if (orca.state.headbarButtons?.[`${r}.sync`] == null)
     try {
       const A = orca.components.Button, t = orca.components.HoverContextMenu, e = orca.components.MenuText;
       if (!A || !t || !e) {
@@ -975,56 +1068,56 @@ function lA(s) {
         return;
       }
       let o = null;
-      const a = () => {
-        const i = nA(w), c = i.isSyncing, r = i.progress;
-        let g = "";
-        return c && r.total > 0 ? g = `${r.current}/${r.total} 同步中` : c && (g = "同步中..."), /* @__PURE__ */ N.jsx(
+      const c = () => {
+        const g = nA(w), a = g.isSyncing, s = g.progress;
+        let l = "";
+        return a && s.message ? l = s.message : a && (l = "同步中..."), /* @__PURE__ */ W.jsx(
           t,
           {
-            menu: (h) => /* @__PURE__ */ N.jsxs(N.Fragment, { children: [
-              /* @__PURE__ */ N.jsx(
+            menu: (i) => /* @__PURE__ */ W.jsxs(W.Fragment, { children: [
+              /* @__PURE__ */ W.jsx(
                 e,
                 {
-                  title: c ? "正在同步中..." : "Sync Now (Incremental)",
+                  title: a ? "正在同步中..." : "Sync Now (Incremental)",
                   onClick: async () => {
-                    c || (h(), await orca.commands.invokeCommand(`${s}.sync`));
+                    a || (i(), await orca.commands.invokeCommand(`${r}.sync`));
                   },
-                  disabled: c
+                  disabled: a
                 }
               ),
-              /* @__PURE__ */ N.jsx(
+              /* @__PURE__ */ W.jsx(
                 e,
                 {
                   title: "Full Sync (All Highlights)",
                   onClick: async () => {
-                    c || (h(), await orca.commands.invokeCommand(`${s}.fullSync`));
+                    a || (i(), await orca.commands.invokeCommand(`${r}.fullSync`));
                   },
-                  disabled: c
+                  disabled: a
                 }
               ),
-              /* @__PURE__ */ N.jsx(
+              /* @__PURE__ */ W.jsx(
                 e,
                 {
                   title: "Test Connection",
                   onClick: async () => {
-                    c || (h(), await orca.commands.invokeCommand(`${s}.testConnection`));
+                    a || (i(), await orca.commands.invokeCommand(`${r}.testConnection`));
                   },
-                  disabled: c
+                  disabled: a
                 }
               )
             ] }),
-            children: /* @__PURE__ */ N.jsxs(
+            children: /* @__PURE__ */ W.jsxs(
               A,
               {
                 variant: "plain",
                 onClick: () => {
-                  c || orca.commands.invokeCommand(`${s}.sync`);
+                  a || orca.commands.invokeCommand(`${r}.sync`);
                 },
-                disabled: c,
-                style: { opacity: c ? 0.5 : 1 },
+                disabled: a,
+                style: { opacity: a ? 0.5 : 1 },
                 children: [
-                  /* @__PURE__ */ N.jsx("img", { className: "readwise-sync-button", src: aA, alt: "Readwise Sync" }),
-                  g && /* @__PURE__ */ N.jsx("span", { style: { marginLeft: "8px", fontSize: "12px" }, children: g })
+                  /* @__PURE__ */ W.jsx("img", { className: "readwise-sync-button", src: cA, alt: "Readwise Sync" }),
+                  l && /* @__PURE__ */ W.jsx("span", { style: { marginLeft: "8px", fontSize: "12px" }, children: l })
                 ]
               }
             )
@@ -1032,13 +1125,13 @@ function lA(s) {
         );
       };
       orca.headbar.registerHeadbarButton(
-        `${s}.sync`,
-        () => a()
+        `${r}.sync`,
+        () => c()
       );
       const n = oA(w, () => {
-        orca.headbar.unregisterHeadbarButton(`${s}.sync`), orca.headbar.registerHeadbarButton(
-          `${s}.sync`,
-          () => a()
+        orca.headbar.unregisterHeadbarButton(`${r}.sync`), orca.headbar.registerHeadbarButton(
+          `${r}.sync`,
+          () => c()
         );
       });
       window.__readwiseSyncUnsubscribe = n, console.log("[Readwise Sync] Headbar button registered successfully");
@@ -1048,17 +1141,17 @@ function lA(s) {
   else
     console.log("[Readwise Sync] Headbar button already registered");
 }
-function iA(s) {
-  I.settings = { ...I.settings, ...s }, typeof I.setupAutoSync == "function" && I.setupAutoSync();
+function iA(r) {
+  k.settings = { ...k.settings, ...r }, typeof k.setupAutoSync == "function" && k.setupAutoSync();
 }
-async function RA(s) {
-  const A = await x();
-  iA(A), cA(s), await new Promise((t) => setTimeout(t, 100)), lA(s);
+async function gA(r) {
+  const A = await M();
+  iA(A), aA(r), await new Promise((t) => setTimeout(t, 100)), lA(r);
 }
-async function EA() {
-  typeof I.cleanup == "function" && I.cleanup();
+async function RA() {
+  typeof k.cleanup == "function" && k.cleanup();
 }
 export {
-  uA as load,
-  dA as unload
+  dA as load,
+  uA as unload
 };

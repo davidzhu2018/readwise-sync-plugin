@@ -411,7 +411,7 @@ class SyncManager {
         syncState.progress.total = highlights.length;
         syncState.progress.message = '创建 Orca 块...';
 
-        console.log('Creating child blocks for', highlights.length, 'highlights');
+        console.log('Creating category structure for', highlights.length, 'highlights');
 
         const validHighlights = highlights.filter(h => {
           const text = this.formatBlockContent(h);
@@ -420,10 +420,12 @@ class SyncManager {
 
         console.log('Valid highlights to create:', validHighlights.length);
 
-        // 由于 batchInsertText 存在问题，直接使用逐个创建的方法
-        console.log('Creating child blocks using individual insertBlock calls...');
+        // 按分类组织高亮
+        const categoryHighlights = this.groupHighlightsByCategory(validHighlights);
+        console.log('Grouped highlights by category:', Object.keys(categoryHighlights).map(cat => `${cat}: ${categoryHighlights[cat].length}`));
 
-        await this.createBlocksIndividually(syncRootBlockId, validHighlights, createdBlocks, failedBlocks);
+        // 创建三级结构：分类块 + 高亮块
+        await this.createCategoryBlocks(syncRootBlockId, categoryHighlights, createdBlocks, failedBlocks);
 
         syncState.progress.current = createdBlocks.length;
         syncState.progress.message = `已创建 ${createdBlocks.length}/${validHighlights.length} 个块`;
@@ -476,9 +478,202 @@ class SyncManager {
     return { createdBlocks, failedBlocks };
   }
 
+  // 按分类分组高亮
+  groupHighlightsByCategory(highlights) {
+    const categories = {
+      books: [],
+      articles: [],
+      tweets: [],
+      supplementals: [],
+      podcasts: []
+    };
+
+    for (const highlight of highlights) {
+      const category = highlight.category || 'books';
+      if (categories[category]) {
+        categories[category].push(highlight);
+      } else {
+        // 默认归入 books
+        categories.books.push(highlight);
+      }
+    }
+
+    return categories;
+  }
+
+  // 创建分类块和高亮块的三级结构
+  async createCategoryBlocks(syncRootBlockId, categoryHighlights, createdBlocks, failedBlocks) {
+    console.log('Creating category blocks...');
+
+    // 5个分类的顺序
+    const categoryOrder = ['books', 'articles', 'tweets', 'supplementals', 'podcasts'];
+
+    // 确保父块有 children 数组
+    if (!orca.state.blocks[syncRootBlockId].children) {
+      orca.state.blocks[syncRootBlockId].children = [];
+    }
+
+    // 获取根块ID（用于创建独立分类块）
+    let rootBlockId = null;
+    const blocks = orca.state?.blocks;
+    if (blocks) {
+      for (const blockId in blocks) {
+        const block = blocks[blockId];
+        if (!block.parent && !block.left) {
+          rootBlockId = blockId;
+          console.log('Found root block for creating category blocks:', rootBlockId);
+          break;
+        }
+      }
+    }
+
+    if (!rootBlockId) {
+      console.error('No root block found for creating category blocks');
+      return;
+    }
+
+    const categoryBlockIds = {};
+    const categoryBlocksToMove = [];
+
+    // 第一步：创建5个分类块（先创建为独立块）
+    for (let i = 0; i < categoryOrder.length; i++) {
+      const category = categoryOrder[i];
+      const highlights = categoryHighlights[category];
+
+      // 跳过没有高亮的分类
+      if (!highlights || highlights.length === 0) {
+        console.log(`Skipping category ${category} (no highlights)`);
+        continue;
+      }
+
+      console.log(`Creating category block for ${category} (${highlights.length} highlights)`);
+
+      try {
+        // 在根块下创建分类块（独立块）
+        const categoryBlockId = await orca.commands.invokeEditorCommand(
+          'core.editor.insertBlock',
+          null,
+          rootBlockId,
+          'lastChild',
+          [{ t: 't', v: category }]
+        );
+
+        // 转换为三级标题
+        await orca.commands.invokeEditorCommand('core.editor.makeHeading3', null, categoryBlockId);
+
+        // 添加标签
+        try {
+          await orca.commands.invokeEditorCommand(
+            'core.editor.insertTag',
+            null,
+            categoryBlockId,
+            `Readwise/${category}`
+          );
+        } catch (tagError) {
+          console.warn(`Failed to add tag to category block ${category}:`, tagError);
+        }
+
+        categoryBlockIds[category] = categoryBlockId;
+        categoryBlocksToMove.push({
+          id: categoryBlockId,
+          category: category
+        });
+
+        console.log(`Created category block ${categoryBlockId} for ${category}`);
+
+      } catch (error) {
+        console.error(`Failed to create category block for ${category}:`, error);
+      }
+    }
+
+    console.log('Created category blocks:', categoryBlockIds);
+
+    // 等待所有分类块创建完成
+    await this.delay(200);
+
+    // 第二步：使用 moveBlocks 将所有分类块移动到同步标记块下
+    if (categoryBlocksToMove.length > 0) {
+      console.log(`Moving ${categoryBlocksToMove.length} category blocks to sync root...`);
+
+      const categoryBlockIdsArray = categoryBlocksToMove.map(b => b.id);
+
+      try {
+        await orca.commands.invokeEditorCommand(
+          'core.editor.moveBlocks',
+          null,
+          categoryBlockIdsArray,
+          syncRootBlockId,
+          'lastChild'
+        );
+
+        console.log(`Moved ${categoryBlockIdsArray.length} category blocks to sync root using moveBlocks`);
+      } catch (error) {
+        console.error('Failed to move category blocks using moveBlocks:', error);
+      }
+
+      // 手动设置每个分类块的 parent 和 left 属性
+      for (let i = 0; i < categoryBlocksToMove.length; i++) {
+        const block = categoryBlocksToMove[i];
+        const blockId = block.id;
+        const prevBlockId = i > 0 ? categoryBlocksToMove[i - 1].id : null;
+
+        // 手动设置 parent 和 left 属性
+        if (orca.state.blocks[blockId]) {
+          orca.state.blocks[blockId].parent = syncRootBlockId;
+          orca.state.blocks[blockId].left = prevBlockId;
+          console.log(`Set category block ${blockId} (${block.category}): parent=${syncRootBlockId}, left=${prevBlockId}`);
+        }
+
+        // 添加到父块的 children 数组
+        if (!orca.state.blocks[syncRootBlockId].children.includes(blockId)) {
+          orca.state.blocks[syncRootBlockId].children.push(blockId);
+        }
+      }
+
+      console.log('All category blocks moved and properties set');
+    }
+
+    // 第二步：为每个分类创建高亮块（并发创建 + 移动）
+    for (const category of categoryOrder) {
+      const categoryBlockId = categoryBlockIds[category];
+      const highlights = categoryHighlights[category];
+
+      if (!categoryBlockId || !highlights || highlights.length === 0) {
+        continue;
+      }
+
+      console.log(`Creating highlights for category ${category} (${highlights.length} highlights)...`);
+
+      // 为该分类创建高亮块
+      await this.createBlocksIndividually(
+        categoryBlockId,
+        category,
+        highlights,
+        createdBlocks,
+        failedBlocks
+      );
+
+      console.log(`Completed category ${category}`);
+    }
+
+    console.log('All category blocks and highlights created');
+  }
+
   // 并发创建独立块，然后移动到同步标记块下
-  async createBlocksIndividually(syncRootBlockId, validHighlights, createdBlocks, failedBlocks) {
-    console.log(`Creating ${validHighlights.length} blocks using 10 concurrent threads...`);
+  async createBlocksIndividually(syncRootBlockId, categoryName, validHighlights, createdBlocks, failedBlocks) {
+    console.log(`Creating ${validHighlights.length} blocks for category ${categoryName} using 10 concurrent threads...`);
+
+    // 根据总条数确定刷新频率
+    const totalCount = validHighlights.length;
+    let refreshInterval;
+    if (totalCount > 600) {
+      refreshInterval = 200;
+    } else if (totalCount > 200) {
+      refreshInterval = 100;
+    } else {
+      refreshInterval = 50;
+    }
+    console.log(`Category ${categoryName}: using refresh interval of ${refreshInterval}`);
 
     // 首先验证父块是否存在且有效
     const parentBlock = orca.state.blocks[syncRootBlockId];
@@ -534,6 +729,7 @@ class SyncManager {
     // 使用10线程并发创建
     const CONCURRENCY = 10;
     const independentBlocks = [];
+    let batchCreatedCount = 0; // 当前批次创建的数量
 
     for (let i = 0; i < validHighlights.length; i += CONCURRENCY) {
       const batch = validHighlights.slice(i, i + CONCURRENCY);
@@ -551,64 +747,35 @@ class SyncManager {
             originalIndex: result.index
           });
           createdBlocks.push({ id: result.blockId, content: this.formatBlockContent(result.highlight) });
+          batchCreatedCount++;
         } else {
           failedBlocks.push({ highlight: result.highlight, error: result.error });
         }
       }
 
-      // 每200条更新一次进度
-      if ((createdBlocks.length % 200 === 0) || createdBlocks.length === validHighlights.length) {
-        syncState.progress.current = createdBlocks.length;
-        syncState.progress.message = `${createdBlocks.length}/${validHighlights.length} 同步中`;
+      // 根据刷新频率更新进度
+      if ((batchCreatedCount % refreshInterval === 0) || batchCreatedCount === validHighlights.length) {
+        syncState.progress.current = batchCreatedCount;
+        syncState.progress.message = `${categoryName}: ${batchCreatedCount}/${validHighlights.length}`;
       }
 
       // 短暂延迟避免过快
       await this.delay(10);
     }
 
-    console.log(`Created ${independentBlocks.length} independent blocks`);
+    console.log(`Created ${independentBlocks.length} independent blocks for category ${categoryName}`);
 
     // 按原始顺序排序
     independentBlocks.sort((a, b) => a.originalIndex - b.originalIndex);
 
     // 移动所有独立块到同步标记块下
-    console.log('Moving all blocks to sync root block...');
+    console.log(`Moving ${independentBlocks.length} blocks to category block ${syncRootBlockId}...`);
     await this.moveBlocksToParent(syncRootBlockId, independentBlocks);
 
-    console.log('Creation and movement completed:', createdBlocks.length, 'blocks created');
+    console.log(`Creation and movement completed for category ${categoryName}:`, independentBlocks.length, 'blocks created');
 
-    // 最终验证
-    console.log('Final verification...');
-    await this.delay(300);
-
-    const finalParentBlock = orca.state.blocks[syncRootBlockId];
-    if (finalParentBlock) {
-      console.log('Parent block final state:', {
-        id: finalParentBlock.id,
-        childrenCount: finalParentBlock.children?.length || 0,
-        children: finalParentBlock.children,
-        expectedCount: createdBlocks.length
-      });
-
-      // 验证子块
-      if (finalParentBlock.children && Array.isArray(finalParentBlock.children)) {
-        console.log('Children block IDs:', finalParentBlock.children);
-        finalParentBlock.children.forEach((childId, index) => {
-          const childBlock = orca.state.blocks[childId];
-          if (childBlock) {
-            console.log(`Child ${index} (block ${childId}):`, {
-              parent: childBlock.parent,
-              left: childBlock.left,
-              text: childBlock.text?.substring(0, 50)
-            });
-          } else {
-            console.warn(`Child block ${childId} not found in state!`);
-          }
-        });
-      } else {
-        console.warn('Sync block has no children array');
-      }
-    }
+    // 返回本次创建的数量
+    return independentBlocks.length;
   }
 
   // 移动块到父块下并设置正确的parent/left/children属性

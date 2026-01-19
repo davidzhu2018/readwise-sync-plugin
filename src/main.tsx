@@ -251,8 +251,8 @@ function registerCommands(_pluginName: string) {
             lastSyncDate: ''
           };
 
-          // 保存到持久化存储
-          await orca.plugins.setData('readwise-sync', 'settings', updatedSettings);
+          // 保存到持久化存储（序列化为 JSON 字符串）
+          await orca.plugins.setData('readwise-sync', 'settings', JSON.stringify(updatedSettings));
 
           // 更新 syncManager 的设置
           syncManager.settings = { ...syncManager.settings, ...updatedSettings };

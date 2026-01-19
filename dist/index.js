@@ -1,4 +1,4 @@
-var M = { exports: {} }, z = {};
+var H = { exports: {} }, v = {};
 const G = React;
 /**
  * @license React
@@ -11,7 +11,7 @@ const G = React;
  */
 var U;
 function q() {
-  if (U) return z;
+  if (U) return v;
   U = 1;
   var n = G, A = Symbol.for("react.element"), t = Symbol.for("react.fragment"), e = Object.prototype.hasOwnProperty, o = n.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, s = { key: !0, ref: !0, __self: !0, __source: !0 };
   function r(l, c, a) {
@@ -21,16 +21,16 @@ function q() {
     if (l && l.defaultProps) for (i in c = l.defaultProps, c) g[i] === void 0 && (g[i] = c[i]);
     return { $$typeof: A, type: l, key: d, ref: E, props: g, _owner: o.current };
   }
-  return z.Fragment = t, z.jsx = r, z.jsxs = r, z;
+  return v.Fragment = t, v.jsx = r, v.jsxs = r, v;
 }
 var O;
 function Z() {
-  return O || (O = 1, M.exports = q()), M.exports;
+  return O || (O = 1, H.exports = q()), H.exports;
 }
 var N = Z();
-const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap(), X = (n) => n && (J.has(n) ? J.get(n) : Y(n) === Object.prototype || Y(n) === Array.prototype), AA = (n) => X(n) && n[_] || null, V = (n, A = !0) => {
+const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap(), X = (n) => n && (J.has(n) ? J.get(n) : Y(n) === Object.prototype || Y(n) === Array.prototype), AA = (n) => X(n) && n[_] || null, K = (n, A = !0) => {
   J.set(n, A);
-}, H = {}, F = (n) => typeof n == "object" && n !== null, B = /* @__PURE__ */ new WeakMap(), x = /* @__PURE__ */ new WeakSet(), tA = (n = Object.is, A = (a, i) => new Proxy(a, i), t = (a) => F(a) && !x.has(a) && (Array.isArray(a) || !(Symbol.iterator in a)) && !(a instanceof WeakMap) && !(a instanceof WeakSet) && !(a instanceof Error) && !(a instanceof Number) && !(a instanceof Date) && !(a instanceof String) && !(a instanceof RegExp) && !(a instanceof ArrayBuffer), e = (a) => {
+}, M = {}, F = (n) => typeof n == "object" && n !== null, B = /* @__PURE__ */ new WeakMap(), x = /* @__PURE__ */ new WeakSet(), tA = (n = Object.is, A = (a, i) => new Proxy(a, i), t = (a) => F(a) && !x.has(a) && (Array.isArray(a) || !(Symbol.iterator in a)) && !(a instanceof WeakMap) && !(a instanceof WeakSet) && !(a instanceof Error) && !(a instanceof Number) && !(a instanceof Date) && !(a instanceof String) && !(a instanceof RegExp) && !(a instanceof ArrayBuffer), e = (a) => {
   switch (a.status) {
     case "fulfilled":
       return a.value;
@@ -44,7 +44,7 @@ const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap()
   if (d?.[0] === i)
     return d[1];
   const E = Array.isArray(a) ? [] : Object.create(Object.getPrototypeOf(a));
-  return V(E, !0), o.set(a, [i, E]), Reflect.ownKeys(a).forEach((p) => {
+  return K(E, !0), o.set(a, [i, E]), Reflect.ownKeys(a).forEach((p) => {
     if (Object.getOwnPropertyDescriptor(E, p))
       return;
     const w = Reflect.get(a, p), { enumerable: S } = Reflect.getOwnPropertyDescriptor(
@@ -58,7 +58,7 @@ const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap()
       configurable: !0
     };
     if (x.has(w))
-      V(w, !1);
+      K(w, !1);
     else if (w instanceof Promise)
       delete h.value, h.get = () => g(w);
     else if (B.has(w)) {
@@ -91,7 +91,7 @@ const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap()
     const k = [...u];
     k[1] = [y, ...k[1]], E(k, R);
   }, h = /* @__PURE__ */ new Map(), I = (y, u) => {
-    if ((H ? "production" : void 0) !== "production" && h.has(y))
+    if ((M ? "production" : void 0) !== "production" && h.has(y))
       throw new Error("prop listener already exists");
     if (d.size) {
       const R = u[3](S(y));
@@ -103,7 +103,7 @@ const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap()
     const R = h.get(y);
     R && (h.delete(y), (u = R[1]) == null || u.call(R));
   }, Q = (y) => (d.add(y), d.size === 1 && h.forEach(([R, k], j) => {
-    if ((H ? "production" : void 0) !== "production" && k)
+    if ((M ? "production" : void 0) !== "production" && k)
       throw new Error("remove already exists");
     const P = R[3](S(j));
     h.set(j, [R, P]);
@@ -168,12 +168,12 @@ const _ = Symbol(), Y = Object.getPrototypeOf, J = /* @__PURE__ */ new WeakMap()
   r,
   l
 ], [eA] = tA();
-function K(n = {}) {
+function V(n = {}) {
   return eA(n);
 }
 function oA(n, A, t) {
   const e = B.get(n);
-  (H ? "production" : void 0) !== "production" && !e && console.warn("Please use proxy object");
+  (M ? "production" : void 0) !== "production" && !e && console.warn("Please use proxy object");
   let o;
   const s = [], r = e[3];
   let l = !1;
@@ -188,14 +188,14 @@ function oA(n, A, t) {
 }
 function nA(n, A) {
   const t = B.get(n);
-  (H ? "production" : void 0) !== "production" && !t && console.warn("Please use proxy object");
+  (M ? "production" : void 0) !== "production" && !t && console.warn("Please use proxy object");
   const [e, o, s] = t;
   return s(e, o(), A);
 }
 globalThis.orca = globalThis.orca || {};
 class sA {
   constructor(A) {
-    this.baseURL = "https://readwise.io/api/v2", typeof A == "string" ? this.apiKey = A.trim() : A && A.apiKey ? this.apiKey = A.apiKey.trim() : this.apiKey = "", this.requestState = K({
+    this.baseURL = "https://readwise.io/api/v2", typeof A == "string" ? this.apiKey = A.trim() : A && A.apiKey ? this.apiKey = A.apiKey.trim() : this.apiKey = "", this.requestState = V({
       isConnected: !1,
       lastError: null,
       requestCount: 0
@@ -313,7 +313,7 @@ class sA {
   }
 }
 globalThis.orca = globalThis.orca || {};
-const f = K({
+const f = V({
   isSyncing: !1,
   lastSyncDate: null,
   syncStats: {
@@ -930,7 +930,21 @@ class rA {
       throw new Error("AUTH_ERROR: Invalid API key or connection failed");
   }
   async saveLastSyncDate() {
-    this.settings.lastSyncDate = (/* @__PURE__ */ new Date()).toISOString(), await orca.plugins.setData("readwise-sync", "settings", this.settings);
+    this.settings.lastSyncDate = (/* @__PURE__ */ new Date()).toISOString();
+    try {
+      const A = {
+        apiKey: this.settings.apiKey || "",
+        defaultSyncMode: this.settings.defaultSyncMode || "incremental",
+        autoSyncEnabled: this.settings.autoSyncEnabled || !1,
+        syncInterval: this.settings.syncInterval || 60,
+        lastSyncDate: this.settings.lastSyncDate || "",
+        syncCategory: this.settings.syncCategory || "all",
+        includeTags: this.settings.includeTags !== !1
+      };
+      await orca.plugins.setData("readwise-sync", "settings", JSON.stringify(A)), console.log("Saved last sync date:", this.settings.lastSyncDate);
+    } catch (A) {
+      console.error("Failed to save last sync date:", A);
+    }
   }
 }
 const m = new rA(), aA = "data:image/png;base64,AAABAAMAMDAAAAEACACoDgAANgAAACAgAAABAAgAqAgAAN4OAAAQEAAAAQAIAGgFAACGFwAAKAAAADAAAABgAAAAAQAIAAAAAAAACQAAAAAAAAAAAAAAAQAAAAAAAAAAAAC3t7QAFxcXAEBAPwBpaWcAu7u3AOTk3wDS0s4AbW1qAPv79gDt7egAJCQjALKyrwDb29cAOzs6ABYWFQDNzckA9vbxAAQEBAD6+vQAlpaTAL+/uwCEhIIAHx8eAK2tqgANDQ0AX19dAJ+fnADIyMQAkZGOALq6tgDj494Af399AKiopQDR0c0A+vr1AAgICABaWlgA/v74AHFxbwAMDAsAmpqXADU1MwDa2tYAY2NhAIyMiQC1tbEA9fXwAAMDAwBVVVMA4+PfAL6+ugCsrKkA/v75AIeHhAAjIyMAx8fDACcnJgDe3toAPj49AGdnZQCQkI0Aubm1AFVVVAB+fnwAp6ekAEJCQABra2gA+fn0ADAwLwCCgn8A/f33AP7++gDCwr4A6+vmANnZ1QAQEBAAOTk4APDw7ACLi4gAtLSwAAICAgDi4t4AfX16AAYGBQDm5uEA/f34AP///gAiIiIAnZ2aACYmJQB4eHUAZmZkAI+PjAC4uLQApqajAPj48wAGBgYALy8uAB0dHQD8/PYARkZFAG9vbQCYmJUAwcG9AOrq5QCGhoQAr6+sAEpKSAAPDw8AYWFfAIqKhwATExIA8/PuAAEBAQAqKikAGBgYAEFBQABqamgAWFhXAIGBfwAcHBsA09PPAPz89wCFhYIArq6qAEpKSQCcnJkAxcXBAO7u6QAlJSQAs7OwANzc2AA8PDsAZWVjAI6OiwAXFxYAzs7KAAUFBQAuLi0A5eXhAICAfQBubmwACQkIAOnp5ACJiYYAEhIRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYVhaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpYYQAAWBAyUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUjIQWAAAWjJ7IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3syWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjREREREREI1ZWVlZWVlZWVlZWRyNERERERCNWVlZWVlZWViNERERERCNSWgAAWlIjREREREQJHCCNjY2NjY2NjY2NfIQJRERECUt8jY2NjY2NeCIJRERERCNSWgAAWlIjRERERERWFAAAAAAAAAAAAAAAKBVHREREEYYAAAAAAAAAMCFWRERERCNSWgAAWlIjREREREQjOkEIbQAAAAAAAGNAa2kjRER7g20AAAAAAIpsfx8jRERERCNSWgAAWlIjRERERERECSZgbgAAAAAAAC01ViNERCOQdQAAAAAAcgQKNSNERERERCNSWgAAWlIjRERERERERERWbwAAAAAAYS5WRERERAmHMAAAAAAATR8JRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WREREZAc3AAAAAAAZGHtERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WREREEVwAAAAAAAAsLxNERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRER7UG0AAAAAADcHe0RERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRCOQQgAAAAAAEj0JRERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WRAldMAAAAAAAZUojRERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WCXoLAAAAAABwHntERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJF5WETwAAAAAAAAnYERERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAJAVXLm0AAAAAAIsNCURERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAEiw2KgAAAAAAMC1EViNERERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAAAAAUYI/WVV7RERERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAAAAAAAAAEg4zCURERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAABdaVAAAAAAAAAAAAAA3OHtERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAJKRfVN3A0U5AnIAAAAAMXFERERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAB5AUhgTpCMaxkAAAAADxB7RERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAC0l7IyM1Po8AAAAAMF9WRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAGKJe0RWKQAAAAAAAB1WRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAACFS3t7jQAAAAAAAIdWRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAflJWdgAAAAAAchtWRERERERERCNSWgAAWlIjRERERERERERWhwAAAAAAAAAAAAAAACVpGgAAAAAATIB7RERERERERCNSWgAAWlIjRERERERERERWTwAAAAAAAAAAAAAAAFF2MQAAAAAAZYEjRERERERERCNSWgAAWlIjREREREREI1Z7QwAAAAAAAAAAAAAAAAAkDwAAAAB0XntERERERERERCNSWgAAWlIjREREREQjBl5GiAAAAAAAAAAAAAAAAAAAAAAAcnM0RERERERERERERCNSWgAAWlIjRERERERWZzAAAAAAAAAAAAAAAAAAAAAAYQI7aisJRERERERERERERCNSWgAAWlIjREREREQJaI5mZmZmZmZmZmZmZmYnWxZnDAeBewlERERERERERERERCNSWgAAWlIjREREREREIwkJCQkJCQkJCQkJCQlke1ZWVgkjRERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWlIjRERERERERERERERERERERERERERERERERERERERERERERERERERERCNSWgAAWjJ7IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjI3syWgAAWBAyUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUjIQWAAAYVhaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpYYQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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";
@@ -1009,7 +1023,7 @@ async function uA() {
   } catch {
   }
 }
-async function v() {
+async function z() {
   const n = {
     apiKey: "",
     defaultSyncMode: "incremental",
@@ -1030,7 +1044,7 @@ function cA(n) {
     `${n}.sync`,
     async () => {
       try {
-        const A = orca.state.plugins[n]?.settings || await v();
+        const A = orca.state.plugins[n]?.settings || await z();
         if (m.settings = { ...m.settings, ...A }, !m.settings.apiKey) {
           orca.notify("error", "Please configure your Readwise API Key in settings");
           return;
@@ -1047,7 +1061,7 @@ function cA(n) {
     `${n}.fullSync`,
     async () => {
       try {
-        const A = orca.state.plugins[n]?.settings || await v();
+        const A = orca.state.plugins[n]?.settings || await z();
         if (m.settings = { ...m.settings, ...A }, !m.settings.apiKey) {
           orca.notify("error", "Please configure your Readwise API Key in settings");
           return;
@@ -1066,7 +1080,7 @@ function cA(n) {
       try {
         await new Promise((t) => setTimeout(t, 100));
         let A = null;
-        return orca.state.plugins?.[n]?.settings && (A = orca.state.plugins[n].settings, console.log("[Test Connection] Loaded settings from orca.state.plugins:", A)), (!A || !A.apiKey) && (A = await v(), console.log("[Test Connection] Loaded settings from getData:", A)), m.settings = { ...m.settings, ...A }, console.log("[Test Connection] Final settings:", m.settings), !m.settings.apiKey || m.settings.apiKey.trim() === "" ? (orca.notify("error", "Please configure your Readwise API Key in settings"), !1) : (await m.validateConnection(), orca.notify("success", "Readwise connection successful"), !0);
+        return orca.state.plugins?.[n]?.settings && (A = orca.state.plugins[n].settings, console.log("[Test Connection] Loaded settings from orca.state.plugins:", A)), (!A || !A.apiKey) && (A = await z(), console.log("[Test Connection] Loaded settings from getData:", A)), m.settings = { ...m.settings, ...A }, console.log("[Test Connection] Final settings:", m.settings), !m.settings.apiKey || m.settings.apiKey.trim() === "" ? (orca.notify("error", "Please configure your Readwise API Key in settings"), !1) : (await m.validateConnection(), orca.notify("success", "Readwise connection successful"), !0);
       } catch (A) {
         return orca.notify("error", `Readwise connection failed: ${A?.message || "Unknown error"}`), !1;
       }
@@ -1077,10 +1091,10 @@ function cA(n) {
     async () => {
       try {
         const t = {
-          ...orca.state.plugins[n]?.settings || await v(),
+          ...orca.state.plugins[n]?.settings || await z(),
           lastSyncDate: ""
         };
-        return await orca.plugins.setData("readwise-sync", "settings", t), m.settings = { ...m.settings, ...t }, orca.notify("success", "Sync time has been reset. Next sync will fetch all highlights."), console.log("[Reset Sync Time] Sync time has been reset"), !0;
+        return await orca.plugins.setData("readwise-sync", "settings", JSON.stringify(t)), m.settings = { ...m.settings, ...t }, orca.notify("success", "Sync time has been reset. Next sync will fetch all highlights."), console.log("[Reset Sync Time] Sync time has been reset"), !0;
       } catch (A) {
         return orca.notify("error", `Failed to reset sync time: ${A?.message || "Unknown error"}`), !1;
       }
@@ -1184,7 +1198,7 @@ function lA(n) {
   m.settings = { ...m.settings, ...n }, typeof m.setupAutoSync == "function" && m.setupAutoSync();
 }
 async function gA(n) {
-  const A = await v();
+  const A = await z();
   lA(A), cA(n), await new Promise((t) => setTimeout(t, 100)), iA(n);
 }
 async function RA() {

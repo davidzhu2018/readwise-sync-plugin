@@ -1170,7 +1170,22 @@ class SyncManager {
 
   async saveLastSyncDate() {
     this.settings.lastSyncDate = new Date().toISOString();
-    await orca.plugins.setData('readwise-sync', 'settings', this.settings);
+    try {
+      // 确保 settings 是纯 JSON 对象，不含循环引用
+      const settingsToSave = {
+        apiKey: this.settings.apiKey || '',
+        defaultSyncMode: this.settings.defaultSyncMode || 'incremental',
+        autoSyncEnabled: this.settings.autoSyncEnabled || false,
+        syncInterval: this.settings.syncInterval || 60,
+        lastSyncDate: this.settings.lastSyncDate || '',
+        syncCategory: this.settings.syncCategory || 'all',
+        includeTags: this.settings.includeTags !== false
+      };
+      await orca.plugins.setData('readwise-sync', 'settings', JSON.stringify(settingsToSave));
+      console.log('Saved last sync date:', this.settings.lastSyncDate);
+    } catch (error) {
+      console.error('Failed to save last sync date:', error);
+    }
   }
 }
 export const syncManager = new SyncManager();

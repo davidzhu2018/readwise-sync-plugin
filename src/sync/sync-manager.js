@@ -114,6 +114,11 @@ class SyncManager {
       // 保存最后同步时间
       await this.saveLastSyncDate();
 
+      // 将同步标记块移动到今日 journal page
+      if (result.syncRootBlockId) {
+        await this.moveSyncBlockToTodayJournal(result.syncRootBlockId);
+      }
+
       // 计算耗时
       const syncEndTime = Date.now();
       const totalDuration = syncEndTime - syncStartTime;
@@ -170,7 +175,7 @@ class SyncManager {
       };
 
       // 过滤并创建 Orca 块
-      const { createdBlocks, failedBlocks } = await this.createOrcaBlocks(allHighlights);
+      const { createdBlocks, failedBlocks, syncRootBlockId } = await this.createOrcaBlocks(allHighlights);
 
       const categories = this.categorizeHighlights(allHighlights);
       const duration = Date.now() - startTime;
@@ -180,7 +185,8 @@ class SyncManager {
         newCount: createdBlocks.length,
         failedCount: failedBlocks.length,
         duration,
-        categories
+        categories,
+        syncRootBlockId  // 返回同步标记块 ID
       };
     } catch (error) {
       console.error('Failed to fetch highlights:', error);
@@ -465,7 +471,7 @@ class SyncManager {
       throw new Error('Failed to create sync block: ' + error.message);
     }
 
-    return { createdBlocks, failedBlocks };
+    return { createdBlocks, failedBlocks, syncRootBlockId };
   }
 
   // 按分类分组高亮
@@ -868,39 +874,42 @@ class SyncManager {
   // 获取或创建今日日记页面
   async getOrCreateTodayJournalPage() {
     try {
-      // 获取今天的日期（格式：YYYY-MM-DD）
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      const dateStr = `${year}-${month}-${day}`;
+      console.log('Getting today journal block using orca.invokeBackend');
 
-      console.log('Getting or creating journal page for date:', dateStr);
-
-      // 尝试通过命令获取今日日记页面
+      // 使用 orca.invokeBackend 获取今日日记块
       try {
-        // 使用 orca.commands 调用获取日记块
-        const journalBlock = await orca.commands.invokeCommand('core.journal.getJournalBlock', dateStr);
+        const journalBlock = await orca.invokeBackend("get-journal-block", new Date());
 
         if (journalBlock) {
           console.log('Found today\'s journal block:', journalBlock);
+
+          // 返回日记块的 ID
+          const journalBlockId = journalBlock.id || journalBlock;
           return {
-            rootBlockId: journalBlock.id || journalBlock,
+            rootBlockId: journalBlockId,
             view: 'journal',
-            id: journalBlock.id || journalBlock
+            id: journalBlockId
           };
         }
       } catch (journalError) {
-        console.log('Journal block command failed, trying alternative method:', journalError);
+        console.log('get-journal-block failed, trying alternative method:', journalError);
       }
 
-      // 如果命令失败，尝试直接在 blocks 中查找日记块
+      // 回退方法：在 blocks 中查找今日日期的块
       try {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
+
+        console.log('Searching for journal block with date:', dateStr);
+
         const blocks = orca.state?.blocks;
         if (blocks) {
-          // 查找可能包含今日日期的块
           for (const blockId in blocks) {
             const block = blocks[blockId];
+            // 查找包含今日日期或 journal 的块
             if (block.text && (block.text.includes(dateStr) || block.text.includes('Journal'))) {
               console.log('Found potential journal block by text:', blockId, block);
               return {
@@ -915,13 +924,113 @@ class SyncManager {
         console.log('Failed to search for journal block:', searchError);
       }
 
-      // 如果无法获取日记页面，返回 null 让调用者使用其他方法
-      console.warn('Could not get or create journal page');
+      // 如果无法获取日记页面，返回 null
+      console.warn('Could not get today journal page');
       return null;
 
     } catch (error) {
       console.error('Error getting today\'s journal page:', error);
       return null;
+    }
+  }
+
+  // 将同步标记块移动到今日 journal page
+  async moveSyncBlockToTodayJournal(syncRootBlockId) {
+    try {
+      console.log('Moving sync block to today journal:', syncRootBlockId);
+
+      // 获取今日 journal page
+      const journalPage = await this.getOrCreateTodayJournalPage();
+
+      if (!journalPage || !journalPage.rootBlockId) {
+        console.warn('Failed to get today journal page, skipping move');
+        return;
+      }
+
+      const journalRootBlockId = journalPage.rootBlockId;
+      console.log('Found today journal root block:', journalRootBlockId);
+
+      // 检查同步标记块是否已经存在
+      if (!orca.state.blocks[syncRootBlockId]) {
+        console.warn('Sync block not found in state:', syncRootBlockId);
+        return;
+      }
+
+      // 检查是否是同一个块（防止自我移动）
+      if (syncRootBlockId === journalRootBlockId) {
+        console.log('Sync block is the same as journal root block, no move needed');
+        return;
+      }
+
+      // 检查同步标记块是否已经是 journal 块的后代
+      if (this.isBlockDescendant(syncRootBlockId, journalRootBlockId)) {
+        console.log('Sync block is already a descendant of journal page, no move needed');
+        return;
+      }
+
+      // 检查 journal 块是否是同步标记块的后代（防止循环移动）
+      if (this.isBlockDescendant(journalRootBlockId, syncRootBlockId)) {
+        console.warn('Journal block is a descendant of sync block, cannot move (would create cycle)');
+        return;
+      }
+
+      // 检查同步标记块是否已经在今日 journal page 中
+      const currentParent = orca.state.blocks[syncRootBlockId].parent;
+      if (currentParent === journalRootBlockId) {
+        console.log('Sync block is already in today journal page');
+        return;
+      }
+
+      // 使用 moveBlocks 将同步标记块移动到今日 journal page 的最后
+      try {
+        await orca.commands.invokeEditorCommand(
+          'core.editor.moveBlocks',
+          null,
+          [syncRootBlockId],
+          journalRootBlockId,
+          'lastChild'
+        );
+        console.log('Successfully moved sync block to today journal page');
+      } catch (moveError) {
+        console.error('Failed to move sync block:', moveError);
+        // 即使移动失败也不抛出错误，因为同步已经完成
+      }
+
+    } catch (error) {
+      console.error('Error moving sync block to today journal:', error);
+      // 不抛出错误，因为移动失败不应该影响同步的成功
+    }
+  }
+
+  // 检查一个块是否是另一个块的后代
+  isBlockDescendant(potentialDescendant, potentialAncestor) {
+    try {
+      if (!orca.state.blocks[potentialDescendant] || !orca.state.blocks[potentialAncestor]) {
+        return false;
+      }
+
+      let currentBlockId = potentialDescendant;
+      const visited = new Set(); // 防止循环引用
+
+      while (currentBlockId && !visited.has(currentBlockId)) {
+        visited.add(currentBlockId);
+
+        if (currentBlockId === potentialAncestor) {
+          return true;
+        }
+
+        const currentBlock = orca.state.blocks[currentBlockId];
+        if (!currentBlock) {
+          break;
+        }
+
+        currentBlockId = currentBlock.parent;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error checking block descendants:', error);
+      return false;
     }
   }
 

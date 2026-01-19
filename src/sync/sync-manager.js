@@ -360,16 +360,14 @@ class SyncManager {
 
     console.log('Using root block ID:', rootBlockId);
 
-    // 创建同步标记块：ReadwiseSyncToOrca + 年月日时分秒
+    // 创建同步标记块：ReadwiseSync_YYYY年MM月DD日HH点mm分
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     const hour = String(now.getHours()).padStart(2, '0');
     const minute = String(now.getMinutes()).padStart(2, '0');
-    const second = String(now.getSeconds()).padStart(2, '0');
-    const syncTimestamp = `${year}${month}${day}${hour}${minute}${second}`;
-    const syncBlockTitle = `ReadwiseSyncToOrca${syncTimestamp}`;
+    const syncBlockTitle = `ReadwiseSync_${year}年${month}月${day}日${hour}点${minute}分`;
 
     let syncRootBlockId = null;
     try {

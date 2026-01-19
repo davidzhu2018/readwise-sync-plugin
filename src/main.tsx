@@ -24,36 +24,43 @@ export async function load(_name: string) {
       description: 'Your Readwise access token. Get it from https://readwise.io/access_token',
       type: 'string',
     },
-    defaultSyncMode: {
-      label: 'Default Sync Mode',
-      description: 'Incremental sync only fetches new highlights since last sync. Full sync fetches all highlights.',
-      type: 'string',
-      defaultValue: 'incremental',
-    },
     autoSyncEnabled: {
-      label: 'Auto Sync',
-      description: 'Automatically sync highlights at regular intervals',
+      label: 'Enable Auto Sync',
+      description: 'Automatically sync highlights at regular intervals (minimum 5 minutes)',
       type: 'boolean',
       defaultValue: false,
     },
     syncInterval: {
-      label: 'Sync Interval (minutes)',
-      description: 'Minimum interval is 5 minutes',
+      label: 'Auto Sync Interval (minutes)',
+      description: 'How often to automatically sync highlights (minimum: 5 minutes, recommended: 60 minutes)',
       type: 'number',
       defaultValue: 60,
     },
     syncCategory: {
       label: 'Sync Category',
-      description: 'Choose which category of highlights to sync',
+      description: 'Select which category to sync: all (sync everything), books, articles, tweets, podcasts, or supplementals',
       type: 'string',
       defaultValue: 'all',
       enum: ['all', 'books', 'articles', 'tweets', 'supplementals', 'podcasts'],
+    },
+    defaultSyncMode: {
+      label: 'Default Sync Mode',
+      description: 'Incremental: only fetch new highlights since last sync. Full: fetch all highlights every time.',
+      type: 'string',
+      defaultValue: 'incremental',
+      enum: ['incremental', 'full'],
     },
     includeTags: {
       label: 'Include Tags',
       description: 'Include tags when importing highlights',
       type: 'boolean',
       defaultValue: true,
+    },
+    lastSyncDate: {
+      label: 'Last Sync Time',
+      description: 'Last successful sync timestamp. Use "Reset Sync Time" from toolbar menu to reset.',
+      type: 'string',
+      defaultValue: '',
     },
   });
 
@@ -89,7 +96,19 @@ export async function unload() {
   }
 
   try {
+    orca.commands.unregisterCommand(`${pluginName}.fullSync`);
+  } catch (e) {
+    // 忽略错误
+  }
+
+  try {
     orca.commands.unregisterCommand(`${pluginName}.testConnection`);
+  } catch (e) {
+    // 忽略错误
+  }
+
+  try {
+    orca.commands.unregisterCommand(`${pluginName}.resetSyncTime`);
   } catch (e) {
     // 忽略错误
   }
@@ -177,12 +196,30 @@ function registerCommands(_pluginName: string) {
       `${_pluginName}.testConnection`,
       async () => {
         try {
-          // 从 orca.state.plugins 读取最新设置
-          const currentSettings = orca.state.plugins[_pluginName]?.settings || await loadSettings();
+          // 等待一小段时间确保设置已保存到持久化存储
+          await new Promise(resolve => setTimeout(resolve, 100));
+
+          // 多源读取设置，优先级：orca.state.plugins > getData > 内存中的 syncManager.settings
+          let currentSettings = null;
+
+          // 1. 尝试从 orca.state.plugins 读取（这是 UI 设置的实时状态）
+          if (orca.state.plugins?.[_pluginName]?.settings) {
+            currentSettings = orca.state.plugins[_pluginName].settings;
+            console.log('[Test Connection] Loaded settings from orca.state.plugins:', currentSettings);
+          }
+
+          // 2. 如果没有，尝试从持久化存储读取
+          if (!currentSettings || !currentSettings.apiKey) {
+            currentSettings = await loadSettings();
+            console.log('[Test Connection] Loaded settings from getData:', currentSettings);
+          }
+
+          // 3. 更新 syncManager 的设置
           syncManager.settings = { ...syncManager.settings, ...currentSettings };
+          console.log('[Test Connection] Final settings:', syncManager.settings);
 
           // 检查 API Key
-          if (!syncManager.settings.apiKey) {
+          if (!syncManager.settings.apiKey || syncManager.settings.apiKey.trim() === '') {
             orca.notify('error', 'Please configure your Readwise API Key in settings');
             return false;
           }
@@ -196,6 +233,41 @@ function registerCommands(_pluginName: string) {
         }
       },
       'Test Readwise Connection'
+    );
+  }
+
+  // 重置同步时间命令
+  if (orca.state.commands?.[`${_pluginName}.resetSyncTime`] == null) {
+    orca.commands.registerCommand(
+      `${_pluginName}.resetSyncTime`,
+      async () => {
+        try {
+          // 读取当前设置
+          const currentSettings = orca.state.plugins[_pluginName]?.settings || await loadSettings();
+
+          // 重置同步时间
+          const updatedSettings = {
+            ...currentSettings,
+            lastSyncDate: ''
+          };
+
+          // 保存到持久化存储
+          await orca.plugins.setData('readwise-sync', 'settings', updatedSettings);
+
+          // 更新 syncManager 的设置
+          syncManager.settings = { ...syncManager.settings, ...updatedSettings };
+
+          // 通知用户
+          orca.notify('success', 'Sync time has been reset. Next sync will fetch all highlights.');
+
+          console.log('[Reset Sync Time] Sync time has been reset');
+          return true;
+        } catch (err: any) {
+          orca.notify('error', `Failed to reset sync time: ${err?.message || 'Unknown error'}`);
+          return false;
+        }
+      },
+      'Reset Last Sync Time'
     );
   }
 }
@@ -261,6 +333,16 @@ function registerToolbarButton(_pluginName: string) {
                     if (!isSyncing) {
                       closeMenu();
                       await orca.commands.invokeCommand(`${_pluginName}.testConnection`);
+                    }
+                  }}
+                  disabled={isSyncing}
+                />
+                <MenuText
+                  title="Reset Sync Time"
+                  onClick={async () => {
+                    if (!isSyncing) {
+                      closeMenu();
+                      await orca.commands.invokeCommand(`${_pluginName}.resetSyncTime`);
                     }
                   }}
                   disabled={isSyncing}

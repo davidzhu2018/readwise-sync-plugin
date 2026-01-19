@@ -6,9 +6,16 @@ globalThis.orca = globalThis.orca || {};
 import { proxy,snapshot,subscribe } from 'valtio/vanilla';
 //const { proxy } = require('valtio');
 class ReadwiseAPI {
-  constructor(apiKey) {
+  constructor(settingsOrApiKey) {
     this.baseURL = 'https://readwise.io/api/v2';
-    this.apiKey = apiKey;
+    // 支持传入 settings 对象或直接传入 apiKey 字符串
+    if (typeof settingsOrApiKey === 'string') {
+      this.apiKey = settingsOrApiKey.trim();
+    } else if (settingsOrApiKey && settingsOrApiKey.apiKey) {
+      this.apiKey = settingsOrApiKey.apiKey.trim();
+    } else {
+      this.apiKey = '';
+    }
     this.requestState = proxy({
       isConnected: false,
       lastError: null,
@@ -18,7 +25,9 @@ class ReadwiseAPI {
 
   // 更新配置（响应 settingsChanged 广播）
   updateSettings(settings) {
-    this.apiKey = settings.apiKey;
+    if (settings && settings.apiKey) {
+      this.apiKey = settings.apiKey.trim();
+    }
     this.requestState.lastError = null;
   }
 //🔐 统一请求封装与错误处理

@@ -1169,22 +1169,56 @@ class SyncManager {
   }
 
   async saveLastSyncDate() {
-    this.settings.lastSyncDate = new Date().toISOString();
+    // 获取当前时间并转换为东八区北京时间
+    const now = new Date();
+    // 计算北京时间（UTC+8）
+    const beijingTime = new Date(now.getTime() + (8 * 60 * 60 * 1000) + (now.getTimezoneOffset() * 60 * 1000));
+
+    // 格式化为：YYYY-MM-DD HH:mm:ss
+    const year = beijingTime.getFullYear();
+    const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
+    const day = String(beijingTime.getDate()).padStart(2, '0');
+    const hours = String(beijingTime.getHours()).padStart(2, '0');
+    const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
+    const seconds = String(beijingTime.getSeconds()).padStart(2, '0');
+    const lastSyncDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    this.settings.lastSyncDate = lastSyncDate;
+
     try {
-      // 确保 settings 是纯 JSON 对象，不含循环引用
-      const settingsToSave = {
+      // 方法1：使用 orca.plugins.setSettings 更新应用级设置（会同步到设置界面）
+      const settingsToUpdate = {
         apiKey: this.settings.apiKey || '',
         defaultSyncMode: this.settings.defaultSyncMode || 'incremental',
         autoSyncEnabled: this.settings.autoSyncEnabled || false,
         syncInterval: this.settings.syncInterval || 60,
-        lastSyncDate: this.settings.lastSyncDate || '',
+        lastSyncDate: lastSyncDate,
         syncCategory: this.settings.syncCategory || 'all',
         includeTags: this.settings.includeTags !== false
       };
-      await orca.plugins.setData('readwise-sync', 'settings', JSON.stringify(settingsToSave));
-      console.log('Saved last sync date:', this.settings.lastSyncDate);
+
+      await orca.plugins.setSettings("app", "readwise-sync", settingsToUpdate);
+      console.log('Updated settings via setSettings:', lastSyncDate);
+
     } catch (error) {
-      console.error('Failed to save last sync date:', error);
+      console.error('Failed to update settings via setSettings:', error);
+
+      // 回退方法：使用 setData 保存到持久化存储
+      try {
+        const settingsToSave = {
+          apiKey: this.settings.apiKey || '',
+          defaultSyncMode: this.settings.defaultSyncMode || 'incremental',
+          autoSyncEnabled: this.settings.autoSyncEnabled || false,
+          syncInterval: this.settings.syncInterval || 60,
+          lastSyncDate: lastSyncDate,
+          syncCategory: this.settings.syncCategory || 'all',
+          includeTags: this.settings.includeTags !== false
+        };
+        await orca.plugins.setData('readwise-sync', 'settings', JSON.stringify(settingsToSave));
+        console.log('Saved last sync date via setData:', lastSyncDate);
+      } catch (fallbackError) {
+        console.error('Failed to save via setData:', fallbackError);
+      }
     }
   }
 }
